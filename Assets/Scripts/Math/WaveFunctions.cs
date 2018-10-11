@@ -31,5 +31,6 @@ namespace LinHowe.WaveEquation
 
             return (x,t)=> A * Mathf.Cos(k * x - w * t + InitialPhase);
         }
+        
     }
 }
