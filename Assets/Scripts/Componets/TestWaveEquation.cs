@@ -6,6 +6,9 @@ using System;
 
 namespace LinHowe.WaveEquation
 {
+    /// <summary>
+    /// 测试波动方程
+    /// </summary>
     public class TestWaveEquation : MonoBehaviour
     {
         //需要配置的参数
@@ -207,9 +210,9 @@ namespace LinHowe.WaveEquation
         }
         private void AddWave(Vector3 pos)
         {
-            Vector3 localPos = CubeToLocal(pos);
+            Vector3 localPos = transform.worldToLocalMatrix.MultiplyPoint(pos);
             
-            int hit = Mathf.RoundToInt((pos.x - minX) / d);
+            int hit = Mathf.RoundToInt((localPos.x - minX) / d);
             if (hit >= 0 && hit <= Xsize)
             {
                 Vector3 p = VertexList[hit * 2 + 1];
