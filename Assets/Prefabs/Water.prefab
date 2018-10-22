@@ -55,3 +55,7 @@ MonoBehaviour:
   length: 9
   cellSize: 0.04
   material: {fileID: 2100000, guid: 970a389ba39ecb44b8c1ce961104493d, type: 2}
+  depth: 2.6
+  MapSize: 128
+  Velocity: 1
+  Viscosity: 0.894

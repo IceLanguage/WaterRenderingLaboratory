@@ -1,5 +1,6 @@
 ﻿using System;
 using UnityEngine;
+using UnityEngine.Rendering;
 
 namespace LinHowe.WaterRender
 {
@@ -9,9 +10,23 @@ namespace LinHowe.WaterRender
     public class WaterCamera:MonoBehaviour
     {
         private Camera m_Camera;
+
         private RenderTexture CurTexture;//当前渲染纹理
+        private RenderTexture PreTexture;//上一刻的渲染纹理
         private RenderTexture HeightMap;//高度纹理贴图
         private RenderTexture NormalMap;//法线纹理贴图
+
+        private Material waveEquationMat;//波动方程材质
+        private Material normalGenerateMat;//法线生成材质
+        private Material forceMat;//力的材质
+        private CommandBuffer m_CommandBuffer;
+        private void Awake()
+        {
+            waveEquationMat = new Material(Shader.Find("LinHowe/WaveEquation"));
+            normalGenerateMat = new Material(Shader.Find("LinHowe/NormalGenerate"));
+            forceMat = new Material(Shader.Find("LinHowe/Force"));
+        }
+
         public void Init(float width, float height, float depth,int texSize)
         {
             m_Camera = gameObject.AddComponent<Camera>();
@@ -26,12 +41,19 @@ namespace LinHowe.WaterRender
             m_Camera.clearFlags = CameraClearFlags.Depth;
             m_Camera.allowHDR = false;
 
-            CurTexture = RenderTexture.GetTemporary(texSize, texSize, 16);
-            CurTexture.name = "[CurTex]";
-            CurTexture.format = RenderTextureFormat.ARGB32;
+            m_CommandBuffer = new CommandBuffer();
+            m_Camera.AddCommandBuffer(CameraEvent.AfterImageEffectsOpaque, m_CommandBuffer);
 
             RenderTexture tmp = RenderTexture.active;
+
+            CurTexture = RenderTexture.GetTemporary(texSize, texSize, 16);
+            CurTexture.name = "[CurTex]";
             RenderTexture.active = CurTexture;
+            GL.Clear(false, true, new Color(0, 0, 0, 0));
+
+            PreTexture = RenderTexture.GetTemporary(texSize, texSize, 16);
+            PreTexture.name = "[PreTex]";
+            RenderTexture.active = PreTexture;
             GL.Clear(false, true, new Color(0, 0, 0, 0));
 
             HeightMap = RenderTexture.GetTemporary(texSize, texSize, 16);
@@ -48,14 +70,37 @@ namespace LinHowe.WaterRender
             m_Camera.targetTexture = CurTexture;
         }
 
+        public void ForceDrawMesh(Mesh mesh, Matrix4x4 matrix)
+        {
+            if (null == mesh || null == m_CommandBuffer)
+                return;
+            m_CommandBuffer.DrawMesh(mesh, matrix, forceMat);
+        }
+
+        /// <summary>
+        /// 设置波形方程参数
+        /// </summary>
+        /// <param name="waveParams"></param>
+        public void SetWaveParams(Vector3 waveParams)
+        {
+            waveEquationMat.SetVector("_WaveParams", waveParams);
+        }
+
         private void OnRenderImage(RenderTexture source, RenderTexture destination)
         {
+            waveEquationMat.SetTexture("_PreTex", PreTexture);
+            
+            Graphics.Blit(source, destination, waveEquationMat);
             Graphics.Blit(destination, HeightMap);
-            Graphics.Blit(source, CurTexture);
+            Graphics.Blit(HeightMap, NormalMap, normalGenerateMat);
+            Graphics.Blit(source, PreTexture);
         }
 
         private void OnPostRender()
         {
+            m_CommandBuffer.Clear();
+            m_CommandBuffer.ClearRenderTarget(true, false, Color.black);
+            m_CommandBuffer.SetRenderTarget(CurTexture);
             Shader.SetGlobalTexture("_WaterHeightMap", HeightMap);
             Shader.SetGlobalTexture("_WaterNormalMap", NormalMap);
         }
@@ -68,6 +113,8 @@ namespace LinHowe.WaterRender
                 RenderTexture.ReleaseTemporary(NormalMap);
             if (CurTexture)
                 RenderTexture.ReleaseTemporary(CurTexture);
+            if (PreTexture)
+                RenderTexture.ReleaseTemporary(PreTexture);
         }
     }
 }

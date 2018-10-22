@@ -64,18 +64,6 @@
 			sampler2D _WaterHeightMap;
 			sampler2D _WaterNormalMap;
 			
-
-			float DecodeHeight(float4 rgba) 
-			{
-				float d1 = DecodeFloatRG(rgba.rg);
-				float d2 = DecodeFloatRG(rgba.ba);
-
-				if (d1 >= d2)
-					return d1;
-				else
-					return -d2;
-			}
-			
 			float3 GetLightDirection(float3 worldPos) {
 				if (internalWorldLightPos.w == 0)
 					return worldPos - internalWorldLightPos.xyz;
@@ -104,7 +92,7 @@
 				//从顶点着色输出雾数据
 				UNITY_TRANSFER_FOG(o,o.vertex);
 
-				o.vertex = projPos;
+				o.vertex =  UnityObjectToClipPos(v.vertex);
 
 				COMPUTE_EYEDEPTH(o.proj0.z);
 
@@ -141,13 +129,9 @@
 				col.rgb *= watercol.rgb;
 
 				//Blinn-Phong光照模型
-				float3 halfdir = normalize(lightDir + viewDir);
-				float ndh = max(0, dot(worldNormal, halfdir));
-				col.rgb += internalWorldLightColor.rgb * pow(ndh, _Specular);
-				
-				//漫反射
-				float3 halflambert = dot(worldNormal,lightDir)*0.5+0.5;
-				float3 diffuse = _Diffuse.rgb * halflambert;
+				//float3 halfdir = normalize(lightDir + viewDir);
+				//float ndh = max(0, dot(worldNormal, halfdir));
+				//col.rgb += internalWorldLightColor.rgb * pow(ndh, _Specular*128.0);
 
 				//从顶点着色器中输出雾效数据，将第二个参数中的颜色值作为雾效的颜色值，且在正向附加渲染通道（forward-additive pass）中
 				UNITY_APPLY_FOG(i.fogCoord, col); 

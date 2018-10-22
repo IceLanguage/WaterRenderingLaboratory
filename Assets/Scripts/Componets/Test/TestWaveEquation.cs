@@ -15,6 +15,7 @@ namespace LinHowe.WaveEquation
         public int Xsize = 90;//x轴绘制的精度
         public Material mat = null;//水材质
         public float u = 0.894f;//液体粘稠度
+        
 
         private MeshRenderer mr;
         private MeshFilter mf;
@@ -185,7 +186,11 @@ namespace LinHowe.WaveEquation
             c = Mathf.Clamp(c, -cmax, cmax);
 
             //约束时间间隔
-            float tmax = (u + Mathf.Sqrt(u * u + 32 * c * c / d / d)) / (8 * c * c / d / d);
+            float tmax = (u - Mathf.Sqrt(u * u + 32 * c * c / d / d)) / (8 * c * c / d / d);
+            if(tmax <= 0)
+            {
+                tmax = (u + Mathf.Sqrt(u * u + 32 * c * c / d / d)) / (8 * c * c / d / d);
+            }
             if (tmax < Time.fixedDeltaTime)
             {
                 RandomWave();

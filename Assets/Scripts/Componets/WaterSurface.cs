@@ -13,7 +13,9 @@ namespace LinHowe.WaterRender
         public float width, length, cellSize;//水面网格宽度，长度，单元格大小
         public Material material;//水材质
         public float depth;//水面深度
-        public int MapSize;
+        public int MapSize;//纹理单元格大小
+        public float Velocity = 1f;//波速
+        public float Viscosity = 0.894f;//粘度系数
 
         private MeshRenderer mr;
         private MeshFilter mf;
@@ -23,9 +25,28 @@ namespace LinHowe.WaterRender
         private List<Vector2> uvList;
         private List<Vector3> normalList;
         private List<int> indexList;
+
+        private Vector3 waveParams; //波形参数
+
+        private float d;//单元间隔
+
+        private WaterCamera waterCamera;
+        public WaterCamera Camera
+        {
+            get
+            {
+                if(null == waterCamera)
+                {
+                    InitWaterCamera();
+                    
+                }
+                return waterCamera;
+            }
+        }
         private void Start()
         {
-
+            if(!CheckParams()) return;
+       
             InitMesh();
             InitWaterCamera();
         }
@@ -61,8 +82,6 @@ namespace LinHowe.WaterRender
             int ysize = Mathf.RoundToInt(length / cellSize);
 
             mesh = new Mesh();
-
-
 
             float xcellsize = width / xsize;
             float uvxcellsize = 1.0f / xsize;
@@ -104,7 +123,7 @@ namespace LinHowe.WaterRender
             mesh.RecalculateTangents();
 
             mf.sharedMesh = mesh;
-            mr.material = material;
+            mr.sharedMaterial = material;
         }
 
         /// <summary>
@@ -112,12 +131,67 @@ namespace LinHowe.WaterRender
         /// </summary>
         private void InitWaterCamera()
         {
-            WaterCamera waterCamera = new GameObject("[WaterCamera]")
+            if (null != waterCamera) return;
+            waterCamera = new GameObject("[WaterCamera]")
                 .AddComponent<WaterCamera>();
             waterCamera.transform.SetParent(transform);
             waterCamera.transform.localPosition = Vector3.zero;
             waterCamera.transform.localEulerAngles = new Vector3(90, 0, 0);
             waterCamera.Init(width, length, depth, MapSize);
+            waterCamera.SetWaveParams(waveParams);
+        }
+
+        /// <summary>
+        /// 检查配置的参数
+        /// </summary>
+        private bool CheckParams()
+        {
+            if (cellSize <= 0)
+            {
+                Debug.LogError("单元格大小需大于0");
+                return false;
+            }
+            d = 1 / cellSize;
+            if (width <= 0 || length <=0||depth<=0)
+            {
+                Debug.LogError("水的高度宽度深度需大于0");
+                return false;
+            }
+            if (Velocity <= 0)
+            {
+                Debug.LogError("波速需大于0");
+            }
+            if (Viscosity <= 0)
+            {
+                Debug.LogError("粘度系数不允许小于等于0！");
+                return false;
+            }
+            float u = Viscosity, c = Velocity;
+            //约束速度
+            float cmax = d / 2 / Time.fixedDeltaTime * Mathf.Sqrt(u * Time.fixedDeltaTime + 2);
+            c = Mathf.Clamp(c, -cmax, cmax);
+
+            //约束时间间隔
+            float tmax = (u - Mathf.Sqrt(u * u + 32 * c * c / d / d)) / (8 * c * c / d / d);
+            if (tmax <= 0)
+            {
+                tmax = (u + Mathf.Sqrt(u * u + 32 * c * c / d / d)) / (8 * c * c / d / d);
+            }
+            if (tmax < Time.fixedDeltaTime)
+            {
+                Debug.LogError("粘度系数不符合要求");
+                return false;
+            }
+
+            //计算波形参数
+            float K3 = 2 * c * c * Time.fixedDeltaTime * Time.fixedDeltaTime / (d * d);
+            float K1 = (4 - 4 * K3) / (u * Time.fixedDeltaTime + 2);
+            float K2 = (u * Time.fixedDeltaTime - 2) / (u * Time.fixedDeltaTime + 2);
+            K3 = K3 / (u * Time.fixedDeltaTime + 2);
+
+            waveParams = new Vector4(K1, K2, K3, d);
+            Viscosity = c;
+            return true;
         }
     }
 }
