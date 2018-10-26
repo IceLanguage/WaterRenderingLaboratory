@@ -36,7 +36,7 @@ public class TestForceToWater : MonoBehaviour {
                             Vector3.Dot(ray.direction, Vector3.up);
                         Vector3 hitpos = ray.origin + ray.direction * t;
                         Matrix4x4 matrix = Matrix4x4.TRS(hitpos, Quaternion.identity, Vector3.one * swipeSize);
-                        water.Camera.ForceDrawMesh(swipeMesh, matrix);
+                        if(water&&water.enabled) water.DrawMesh(swipeMesh, matrix);
                     }
                 }
             }

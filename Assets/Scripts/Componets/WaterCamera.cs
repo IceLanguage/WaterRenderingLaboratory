@@ -27,7 +27,7 @@ namespace LinHowe.WaterRender
             forceMat = new Material(Shader.Find("LinHowe/Force"));
         }
 
-        public void Init(float width, float height, float depth,int texSize)
+        public void Init(float width, float height, float depth, int texSize, Vector4 wave)
         {
             m_Camera = gameObject.AddComponent<Camera>();
             m_Camera.aspect = width / height;
@@ -40,7 +40,6 @@ namespace LinHowe.WaterRender
             m_Camera.orthographicSize = height * 0.5f;
             m_Camera.clearFlags = CameraClearFlags.Depth;
             m_Camera.allowHDR = false;
-
             m_CommandBuffer = new CommandBuffer();
             m_Camera.AddCommandBuffer(CameraEvent.AfterImageEffectsOpaque, m_CommandBuffer);
 
@@ -58,16 +57,19 @@ namespace LinHowe.WaterRender
 
             HeightMap = RenderTexture.GetTemporary(texSize, texSize, 16);
             HeightMap.name = "[HeightMap]";
-            HeightMap.format = RenderTextureFormat.ARGB32;
+            //HeightMap.format = RenderTextureFormat.ARGB32;
             RenderTexture.active = HeightMap;
             GL.Clear(false, true, new Color(0, 0, 0, 0));
 
             NormalMap = RenderTexture.GetTemporary(texSize, texSize, 16);
-            NormalMap.format = RenderTextureFormat.ARGB32;
+            //NormalMap.format = RenderTextureFormat.ARGB32;
             NormalMap.name = "[NormalMap]";
 
             RenderTexture.active = tmp;
             m_Camera.targetTexture = CurTexture;
+
+            Shader.SetGlobalFloat("internal_Force", 1.5f);
+            waveEquationMat.SetVector("_WaveParams", wave);
         }
 
         public void ForceDrawMesh(Mesh mesh, Matrix4x4 matrix)
@@ -77,30 +79,26 @@ namespace LinHowe.WaterRender
             m_CommandBuffer.DrawMesh(mesh, matrix, forceMat);
         }
 
-        /// <summary>
-        /// 设置波形方程参数
-        /// </summary>
-        /// <param name="waveParams"></param>
-        public void SetWaveParams(Vector3 waveParams)
+        void OnRenderImage(RenderTexture src, RenderTexture dst)
         {
-            waveEquationMat.SetVector("_WaveParams", waveParams);
-        }
-
-        private void OnRenderImage(RenderTexture source, RenderTexture destination)
-        {
+            //传入前一次的高度渲染结果，以在shader中根据二位波方程计算当前高度
             waveEquationMat.SetTexture("_PreTex", PreTexture);
-            
-            Graphics.Blit(source, destination, waveEquationMat);
-            Graphics.Blit(destination, HeightMap);
+
+            Graphics.Blit(src, dst, waveEquationMat);
+
+            Graphics.Blit(dst, HeightMap);
+
             Graphics.Blit(HeightMap, NormalMap, normalGenerateMat);
-            Graphics.Blit(source, PreTexture);
+
+            Graphics.Blit(src, PreTexture);
         }
 
-        private void OnPostRender()
+        void OnPostRender()
         {
             m_CommandBuffer.Clear();
             m_CommandBuffer.ClearRenderTarget(true, false, Color.black);
             m_CommandBuffer.SetRenderTarget(CurTexture);
+
             Shader.SetGlobalTexture("_WaterHeightMap", HeightMap);
             Shader.SetGlobalTexture("_WaterNormalMap", NormalMap);
         }
@@ -118,3 +116,4 @@ namespace LinHowe.WaterRender
         }
     }
 }
+

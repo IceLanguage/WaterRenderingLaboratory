@@ -54,7 +54,7 @@
 				);
 				float pre = _WaveParams.y*DecodeHeight(tex2D(_PreTex, i.uv));
 				cur += rg + pre;
-				cur *= 0.96;
+				cur *= 0.9;
 				return EncodeHeight(cur);
 			}
 			ENDCG
