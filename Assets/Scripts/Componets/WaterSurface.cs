@@ -33,6 +33,8 @@ namespace LinHowe.WaterRender
 
         void Start()
         {
+            gameObject.AddComponent<ReflectCamera>();
+
             d = 1.0f / MapSize;
 
             if (!CheckSupport())

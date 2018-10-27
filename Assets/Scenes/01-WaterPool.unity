@@ -127,7 +127,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   water: {fileID: 900574941}
-  w: {fileID: 900574942}
   swipeSize: 0.4
   swipeMesh: {fileID: 10207, guid: 0000000000000000e000000000000000, type: 0}
   height: 0
@@ -179,14 +178,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 1e49141ac432dc24085d7c2118384a29, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  width: 9
-  length: 9
-  cellSize: 0.1
-  material: {fileID: 2100000, guid: 970a389ba39ecb44b8c1ce961104493d, type: 2}
-  depth: 2.6
-  MapSize: 128
-  Velocity: 1
-  Viscosity: 0.894
 --- !u!1001 &1371616254
 Prefab:
   m_ObjectHideFlags: 0
@@ -272,7 +263,8 @@ Prefab:
       propertyPath: m_RootOrder
       value: 3
       objectReference: {fileID: 0}
-    m_RemovedComponents: []
+    m_RemovedComponents:
+    - {fileID: 108838335690750726, guid: f39f0165b9b52a142b920894bea80ea4, type: 2}
   m_ParentPrefab: {fileID: 100100000, guid: f39f0165b9b52a142b920894bea80ea4, type: 2}
   m_IsPrefabParent: 0
 --- !u!1001 &1587295844

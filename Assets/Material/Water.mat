@@ -89,6 +89,7 @@ Material:
     - _Mode: 0
     - _OcclusionStrength: 1
     - _Parallax: 0.02
+    - _Range: 4.3
     - _Refract: 0.04
     - _SmoothnessTextureChannel: 0
     - _Specular: 1.4
@@ -99,13 +100,14 @@ Material:
     - _WaveYSpeed: 0.01
     - _ZWrite: 1
     m_Colors:
-    - _BaseColor: {r: 0.43382353, g: 0.859432, b: 1, a: 1}
+    - _BaseColor: {r: 0.7736808, g: 0.9745257, b: 0.99264705, a: 1}
     - _Color: {r: 0.5994809, g: 0.95523196, b: 0.9705882, a: 1}
     - _Color1: {r: 0.30882353, g: 1, b: 0.8387255, a: 1}
     - _Color2: {r: 0, g: 0.25517225, b: 1, a: 1}
     - _DeepColor: {r: 0.15819634, g: 0.5705833, b: 0.97794116, a: 1}
     - _Diffuse: {r: 0.9632353, g: 0.9632353, b: 0.9632353, a: 1}
     - _EmissionColor: {r: 0, g: 0, b: 0, a: 1}
+    - _Fresnel: {r: 0.17, g: 0.41, b: 3.22, a: 0}
     - _Range: {r: 0, g: 5, b: 0, a: 0}
     - _ShallowColor: {r: 0.16176468, g: 1, b: 0.51440156, a: 1}
-    - _WaterColor: {r: 0, g: 0.17241383, b: 1, a: 1}
+    - _WaterColor: {r: 0.49729672, g: 0.62456894, b: 0.9264706, a: 1}

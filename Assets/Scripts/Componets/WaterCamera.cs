@@ -22,6 +22,7 @@ namespace LinHowe.WaterRender
         private CommandBuffer m_CommandBuffer;
         private void Awake()
         {
+            
             waveEquationMat = new Material(Shader.Find("LinHowe/WaveEquation"));
             normalGenerateMat = new Material(Shader.Find("LinHowe/NormalGenerate"));
             forceMat = new Material(Shader.Find("LinHowe/Force"));
@@ -113,6 +114,12 @@ namespace LinHowe.WaterRender
                 RenderTexture.ReleaseTemporary(CurTexture);
             if (PreTexture)
                 RenderTexture.ReleaseTemporary(PreTexture);
+            if (waveEquationMat)
+                Destroy(waveEquationMat);
+            if (forceMat)
+                Destroy(forceMat);
+            if (normalGenerateMat)
+                Destroy(normalGenerateMat);
         }
     }
 }

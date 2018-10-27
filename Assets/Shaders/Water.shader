@@ -5,10 +5,10 @@
 		_Gloss("Gloss", float) = 0
 		_Specular("Specular", float) = 0
 		_Height("Height", float) = 0
-		_Range("Range", vector) = (0, 0, 0, 0)
+		_Range("Range", float) = 0
 		_BaseColor("BaseColor", color) = (1,1,1,1)
 		_WaterColor("WaterColor", color) = (1,1,1,1)
-		_Diffuse("diffuseTex",  color) = (1,1,1,1)
+		_Fresnel("Fresnel x = bias,y = scale,z = power", vector) = (0, 0, 0, 0)
 	}
 
 	SubShader
@@ -54,14 +54,15 @@
 			half _Specular;
 			half4 _BaseColor;
 			half4 _WaterColor;
-			half4 _Range;
-			float _Height;
-			half4 _Diffuse;
+			half _Range;
+			half _Height;
+			half4 _Fresnel;
 			
 			sampler2D _GrabTexture;
 			sampler2D_float _CameraDepthTexture;
 			sampler2D _WaterHeightMap;
 			sampler2D _WaterNormalMap;
+			sampler2D _WaterReflectTexture;
 			
 			float3 GetLightDirection(float3 worldPos) {
 				if (internalWorldLightPos.w == 0)
@@ -119,17 +120,26 @@
 
 				float2 projUv = i.proj0.xy / i.proj0.w;
 				half4 col = tex2D(_GrabTexture, projUv);
+				half4 reflcol = tex2D(_WaterReflectTexture, projUv)*internalWorldLightColor;
+				col.rgb *= _BaseColor.rgb;
+				float height = max(DecodeHeight(tex2D(_WaterHeightMap, i.uv)),0);
 
-				float height = DecodeHeight(tex2D(_WaterHeightMap, i.uv));
 
-				col.rgb = _BaseColor.rgb*col.rgb + pow(dot(worldNormal, lightDir) * 0.4 + 0.6, 80.0) * _WaterColor.rgb * 0.12;
+				//半兰伯特模型
+				half3 diffuse = internalWorldLightColor.rgb * pow(dot(worldNormal, lightDir) * 0.4 + 0.6, 80.0) * _WaterColor.rgb ;
 
-				col.rgb += _WaterColor.rgb*col.rgb * (height*_Range.y);
+				//水波突出
+				col.rgb += _WaterColor.rgb*col.rgb * (height*_Range);
 
 				//Blinn-Phong光照模型
 				float3 halfdir = normalize(lightDir + viewDir);
 				float ndh = max(0, dot(worldNormal, halfdir));
-				col.rgb += internalWorldLightColor.rgb * pow(ndh, _Specular*128.0)*_Gloss;
+				half3 specular = internalWorldLightColor.rgb * pow(ndh, _Specular*128.0)*_Gloss;
+
+				//菲涅尔效果
+				float bias = _Fresnel.x,scale = _Fresnel.y,power =_Fresnel.z;
+				float f = pow(clamp(1.0 - bias - dot(worldNormal, viewDir), 0.0, 1.0),power) * scale;
+				col.rgb += lerp(diffuse, reflcol.rgb+specular, f);
 
 				//从顶点着色器中输出雾效数据，将第二个参数中的颜色值作为雾效的颜色值，且在正向附加渲染通道（forward-additive pass）中
 				UNITY_APPLY_FOG(i.fogCoord, col); 
