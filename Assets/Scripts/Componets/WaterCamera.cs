@@ -10,7 +10,6 @@ namespace LinHowe.WaterRender
     public class WaterCamera:MonoBehaviour
     {
         private Camera m_Camera;
-
         private RenderTexture CurTexture;//当前渲染纹理
         private RenderTexture PreTexture;//上一刻的渲染纹理
         private RenderTexture HeightMap;//高度纹理贴图
@@ -20,12 +19,17 @@ namespace LinHowe.WaterRender
         private Material normalGenerateMat;//法线生成材质
         private Material forceMat;//力的材质
         private CommandBuffer m_CommandBuffer;
-        private void Awake()
+
+        public void InitMat(Shader waveEquationShader, Shader normalGenerateShader, Shader forceShader)
         {
-            
-            waveEquationMat = new Material(Shader.Find("LinHowe/WaveEquation"));
-            normalGenerateMat = new Material(Shader.Find("LinHowe/NormalGenerate"));
-            forceMat = new Material(Shader.Find("LinHowe/Force"));
+            if (waveEquationShader) waveEquationMat = new Material(waveEquationShader);
+            else waveEquationMat = new Material(Shader.Find("LinHowe/WaveEquation"));
+
+            if (normalGenerateShader) normalGenerateMat = new Material(normalGenerateShader);
+            else normalGenerateMat = new Material(Shader.Find("LinHowe/NormalGenerate"));
+
+            if (forceShader) forceMat = new Material(forceShader);
+            else forceMat = new Material(Shader.Find("LinHowe/Force"));
         }
 
         public void Init(float width, float height, float depth, int texSize, Vector4 wave)
@@ -69,7 +73,7 @@ namespace LinHowe.WaterRender
             RenderTexture.active = tmp;
             m_Camera.targetTexture = CurTexture;
 
-            Shader.SetGlobalFloat("internal_Force", 1.5f);
+           
             waveEquationMat.SetVector("_WaveParams", wave);
         }
 

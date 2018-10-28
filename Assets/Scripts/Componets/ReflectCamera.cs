@@ -37,6 +37,7 @@ namespace LinHowe.WaterRender
         private void OnDestroy()
         {
             if(MirrorTexture) RenderTexture.ReleaseTemporary(MirrorTexture);
+            
         }
         private void CopyCamera(Camera src, Camera dest)
         {
@@ -156,5 +157,7 @@ namespace LinHowe.WaterRender
             GL.invertCulling = false;
             isRender = false;
         }
+
+        
     }
 }

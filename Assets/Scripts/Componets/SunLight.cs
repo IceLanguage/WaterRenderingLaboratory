@@ -44,8 +44,9 @@ namespace LinHowe.WaterRender
 
             Shader.SetGlobalColor("internalWorldLightColor",
                 new Color(color.r * intensity, color.g * intensity, color.b * intensity, color.a));
-            Shader.SetGlobalVector("internalWorldLightPos",
-                new Vector4(transform.forward.x, transform.forward.y, transform.forward.z, 0));
+            Vector3 dirction = transform.rotation * - Vector3.forward;
+            Shader.SetGlobalVector("internalWorldLightDir",
+                dirction);
             Shader.SetGlobalMatrix("internalWorldLightMV", wtl);
             Shader.SetGlobalMatrix("internalWorldLightVP", m_Camera.projectionMatrix);
             Shader.SetGlobalVector("internalProjectionParams",
@@ -73,7 +74,7 @@ namespace LinHowe.WaterRender
             }
             if (m_ShadowMap == null)
             {
-                m_ShadowMap = new RenderTexture(shadowMapSize, shadowMapSize, 16);
+                m_ShadowMap = RenderTexture.GetTemporary(shadowMapSize, shadowMapSize, 16);
                 m_Camera.targetTexture = m_ShadowMap;
                 Shader.SetGlobalTexture("internalShadowMap", m_ShadowMap);
             }
@@ -120,6 +121,14 @@ namespace LinHowe.WaterRender
             Gizmos.DrawLine(vp2, vp6);
             Gizmos.DrawLine(vp3, vp7);
             Gizmos.DrawLine(vp4, vp8);
+        }
+
+        private void OnDestroy()
+        {
+            if (m_BGMaterial)
+                Destroy(m_BGMaterial);
+            if (m_ShadowMap)
+                RenderTexture.ReleaseTemporary(m_ShadowMap);
         }
     }
 }

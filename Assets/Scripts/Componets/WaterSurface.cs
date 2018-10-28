@@ -11,20 +11,16 @@ namespace LinHowe.WaterRender
 
         //需要配置的参数
         public float width, length, cellSize;//水面网格宽度，长度，单元格大小
-        public Material material;//水材质
+        public Material material;//水面材质
         public float depth;//水面深度
         public int MapSize;//纹理单元格大小
         public float Velocity = 1f;//波速
         public float Viscosity = 0.894f;//粘度系数
-
+        public Shader waveEquationShader, normalGenerateShader, forceShader;
+        public float forceFactor;
         private MeshRenderer mr;
         private MeshFilter mf;
         private Mesh mesh;
-
-        private List<Vector3> vertexList;
-        private List<Vector2> uvList;
-        private List<Vector3> normalList;
-        private List<int> indexList;
 
         private Vector4 waveParams; //波形参数
 
@@ -42,6 +38,8 @@ namespace LinHowe.WaterRender
             InitWaterCamera();
             InitComponent();
             InitMesh();
+
+            Shader.SetGlobalFloat("internal_Force", forceFactor);
         }
 
         public void DrawMesh(Mesh mesh, Matrix4x4 matrix)
@@ -55,6 +53,12 @@ namespace LinHowe.WaterRender
             Camera.transform.SetParent(transform);
             Camera.transform.localPosition = Vector3.zero;
             Camera.transform.localEulerAngles = new Vector3(90, 0, 0);
+            if(null == waveEquationShader||null == normalGenerateShader || null == forceShader)
+            {
+                Debug.LogError("请配置波动方程所需要的shader");
+                return;
+            }
+            Camera.InitMat(waveEquationShader, normalGenerateShader, forceShader);
             Camera.Init(width, length, depth, MapSize, waveParams);
         }
 
@@ -141,16 +145,18 @@ namespace LinHowe.WaterRender
             int xsize = Mathf.RoundToInt(width / cellSize);
             int ysize = Mathf.RoundToInt(length / cellSize);
 
-            Mesh mesh = new Mesh();
+            mesh = new Mesh();
 
-            List<Vector3> vertexList = new List<Vector3>();
-            List<Vector2> uvList = new List<Vector2>();
-            List<Vector3> normalList = new List<Vector3>();
-            List<int> indexList = new List<int>();
             float xcellsize = width / xsize;
             float uvxcellsize = 1.0f / xsize;
             float ycellsize = length / ysize;
             float uvycellsize = 1.0f / ysize;
+
+            int ListCapacity = (ysize + 1) * (xsize + 1);
+            List<Vector3> vertexList = new List<Vector3>(ListCapacity);
+            List<Vector2> uvList = new List<Vector2>(ListCapacity);
+            List<Vector3> normalList = new List<Vector3>(ListCapacity);
+            List<int> indexList = new List<int>(ListCapacity * 6);
 
             for (int i = 0; i <= ysize; i++)
             {
@@ -162,13 +168,14 @@ namespace LinHowe.WaterRender
 
                     if (i < ysize && j < xsize)
                     {
-                        indexList.Add(i * (xsize + 1) + j);
-                        indexList.Add((i + 1) * (xsize + 1) + j);
-                        indexList.Add((i + 1) * (xsize + 1) + j + 1);
+                        int k = i * (xsize + 1) + j;
+                        indexList.Add(k);
+                        indexList.Add(k + xsize + 1);
+                        indexList.Add(k + xsize + 2);
 
-                        indexList.Add(i * (xsize + 1) + j);
-                        indexList.Add((i + 1) * (xsize + 1) + j + 1);
-                        indexList.Add(i * (xsize + 1) + j + 1);
+                        indexList.Add(k);
+                        indexList.Add(k + xsize + 2);
+                        indexList.Add(k + 1);
                     }
                 }
             }
