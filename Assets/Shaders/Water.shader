@@ -117,7 +117,7 @@
 
 				float2 projUv = i.proj0.xy / i.proj0.zw + normal.xy * _Refract;
 				half4 col = tex2D(_GrabTexture, projUv);
-				half4 reflcol = tex2D(_WaterReflectTexture, projUv)*internalWorldLightColor;
+				half4 reflcol = tex2D(_WaterReflectTexture, projUv);
 				col.rgb *= _BaseColor.rgb;
 				float height = max(DecodeHeight(tex2D(_WaterHeightMap, i.uv)),0);
 
@@ -125,19 +125,21 @@
 				//半兰伯特模型
 				half3 diffuse = internalWorldLightColor.rgb * saturate(0.5 * dot(worldNormal, lightDir) + 0.5) * _Diffuse;
 
-				//水波突出
-				col.rgb += _WaterColor.rgb * (height*_Range);
+				
 
 				//Blinn-Phong光照模型
 				float3 halfdir = normalize(lightDir + viewDir);
-				float ndh = max(0, dot(worldNormal, halfdir));
+				float ndh = saturate(dot(worldNormal, halfdir));
 				half3 specular = internalWorldLightColor.rgb * pow(ndh, _Specular*128.0)*_Gloss;
 
 				//菲涅尔效果
 				float bias = _Fresnel.x,scale = _Fresnel.y,power =_Fresnel.z;
-				float f = pow(clamp(1.0 - bias - dot(worldNormal, viewDir), 0.0, 1.0),power) * scale;
+				float f = clamp(bias + pow(1 - saturate(dot(worldNormal, viewDir)),power) * scale, 0.0, 1.0);
 				col.rgb = lerp(col.rgb + diffuse, reflcol.rgb, f);
 				col.rgb += specular;
+
+				//水波突出
+				col.rgb += _WaterColor.rgb * (height*_Range);
 
 				//从顶点着色器中输出雾效数据，将第二个参数中的颜色值作为雾效的颜色值，且在正向附加渲染通道（forward-additive pass）中
 				UNITY_APPLY_FOG(i.fogCoord, col); 
