@@ -18,8 +18,6 @@
 			//透明度混合
 			blend srcalpha oneminussrcalpha
 
-			colormask rgb
-
 			CGPROGRAM
 			#pragma vertex vert
 			#pragma fragment frag
@@ -57,11 +55,36 @@
 				UNITY_TRANSFER_FOG(o,o.vertex);
 				return o;
 			}
-			
+
+			//ro视线起点，rd是视线方向
+			float4 raymarch(float3 ro, float3 rd)
+			{
+				float4 col = float4(0, 0, 0, 0);
+				float t = 1.0;
+				float stepSize= 250.0/_RayStep;
+				float4 lightDeltaColor =1.0 /_RayStep * internalWorldLightColor;
+				for (float k = 0 ; k <_RayStep; k += 1)
+				{
+					float3 p = ro + t*rd;
+
+					//采样点光照亮度
+					float4 vLight = lightDeltaColor /dot(p-internalWorldLightPos.xyz,p-internalWorldLightPos.xyz);
+					col += vLight;
+					//继续推进
+					t+=stepSize;
+				}
+
+				return col;
+			}
+
 			float4 frag (v2f i) : SV_Target
 			{
-				float4 col = float4(0, 0, 0, 1);
-				float4 lightDeltaColor = internalWorldLightColor;
+				
+				float4 lightDeltaColor =1.0 /_RayStep * internalWorldLightColor;
+
+				float3 viewDir = normalize(UnityWorldSpaceViewDir(i.worldPos));
+
+				
 				return lightDeltaColor ;
 			}
 			ENDCG

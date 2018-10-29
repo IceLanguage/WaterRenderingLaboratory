@@ -66,10 +66,6 @@
 			sampler2D _WaterHeightMap;
 			sampler2D _WaterNormalMap;
 			sampler2D _WaterReflectTexture;
-			
-			//float3 GetLightDirection(float3 worldPos) {
-			//	return internalWorldLightPos.xyz - worldPos;
-			//}
 
 			v2f vert(appdata_full v)
 			{
@@ -111,8 +107,7 @@
 				float3 normal = UnpackNormal(tex2D(_WaterNormalMap, i.uv));
 				float3 worldNormal = float3(dot(i.TW0.xyz, normal), dot(i.TW1.xyz, normal), dot(i.TW2.xyz, normal));
 				float3 worldPos = float3(i.TW0.w, i.TW1.w, i.TW2.w);
-				//float3 lightDir = normalize(GetLightDirection(worldPos));
-				float3 lightDir = normalize(internalWorldLightPos.xyz);
+				float3 lightDir = normalize(internalWorldLightDir.xyz);
 				float3 viewDir = normalize(UnityWorldSpaceViewDir(worldPos));
 
 				float2 projUv = i.proj0.xy / i.proj0.zw + normal.xy * _Refract;
@@ -135,7 +130,7 @@
 				//菲涅尔效果
 				float bias = _Fresnel.x,scale = _Fresnel.y,power =_Fresnel.z;
 				float f = clamp(bias + pow(1 - saturate(dot(worldNormal, viewDir)),power) * scale, 0.0, 1.0);
-				col.rgb = lerp(col.rgb + diffuse, reflcol.rgb, f);
+				col.rgb = lerp(col.rgb ,diffuse + reflcol.rgb, f);
 				col.rgb += specular;
 
 				//水波突出
@@ -146,7 +141,7 @@
 
 				col.a = 1.0;
 
-				return col;
+				return  col;
 			}
 			ENDCG
 		}

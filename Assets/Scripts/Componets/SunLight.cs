@@ -47,6 +47,8 @@ namespace LinHowe.WaterRender
             Vector3 dirction = transform.rotation * - Vector3.forward;
             Shader.SetGlobalVector("internalWorldLightDir",
                 dirction);
+            Shader.SetGlobalVector("internalWorldLightPos",
+                transform.position);
             Shader.SetGlobalMatrix("internalWorldLightMV", wtl);
             Shader.SetGlobalMatrix("internalWorldLightVP", m_Camera.projectionMatrix);
             Shader.SetGlobalVector("internalProjectionParams",

@@ -2,8 +2,9 @@
 #define INTERNAL_CGINC
 
 //SunLight.cs
-uniform float4 internalWorldLightPos;
-uniform float4 internalWorldLightColor;
+float4 internalWorldLightPos;
+float4 internalWorldLightDir;
+float4 internalWorldLightColor;
 float4x4 internalWorldLightMV;
 float4x4 internalWorldLightVP;
 float4 internalProjectionParams;
