@@ -51,15 +51,15 @@
 
 				float4 vertex : SV_POSITION;
 			};
-			half _Gloss;
-			half _Specular;
-			half _Diffuse;
-			half4 _BaseColor;
-			half4 _WaterColor;
-			half _Range;
-			half _Refract;
-			half _Height;
-			half4 _Fresnel;
+			float _Gloss;
+			float _Specular;
+			float _Diffuse;
+			float4 _BaseColor;
+			float4 _WaterColor;
+			float _Range;
+			float _Refract;
+			float _Height;
+			float4 _Fresnel;
 			
 			sampler2D _GrabTexture;
 			sampler2D _CameraDepthTexture;
@@ -106,7 +106,7 @@
 			}
 
 
-			half4 frag(v2f i) : SV_Target
+			float4 frag(v2f i) : SV_Target
 			{
 				float3 normal = UnpackNormal(tex2D(_WaterNormalMap, i.uv));
 				float3 worldNormal = float3(dot(i.TW0.xyz, normal), dot(i.TW1.xyz, normal), dot(i.TW2.xyz, normal));
@@ -116,21 +116,21 @@
 				float3 viewDir = normalize(UnityWorldSpaceViewDir(worldPos));
 
 				float2 projUv = i.proj0.xy / i.proj0.zw + normal.xy * _Refract;
-				half4 col = tex2D(_GrabTexture, projUv);
-				half4 reflcol = tex2D(_WaterReflectTexture, projUv);
+				float4 col = tex2D(_GrabTexture, projUv);
+				float4 reflcol = tex2D(_WaterReflectTexture, projUv);
 				col.rgb *= _BaseColor.rgb;
 				float height = max(DecodeHeight(tex2D(_WaterHeightMap, i.uv)),0);
 
 
 				//半兰伯特模型
-				half3 diffuse = internalWorldLightColor.rgb * saturate(0.5 * dot(worldNormal, lightDir) + 0.5) * _Diffuse;
+				float3 diffuse = internalWorldLightColor.rgb * saturate(0.5 * dot(worldNormal, lightDir) + 0.5) * _Diffuse;
 
 				
 
 				//Blinn-Phong光照模型
 				float3 halfdir = normalize(lightDir + viewDir);
 				float ndh = saturate(dot(worldNormal, halfdir));
-				half3 specular = internalWorldLightColor.rgb * pow(ndh, _Specular*128.0)*_Gloss;
+				float3 specular = internalWorldLightColor.rgb * pow(ndh, _Specular*128.0)*_Gloss;
 
 				//菲涅尔效果
 				float bias = _Fresnel.x,scale = _Fresnel.y,power =_Fresnel.z;

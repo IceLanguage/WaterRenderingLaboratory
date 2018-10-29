@@ -40,7 +40,7 @@
 			sampler2D _MainTex;
 			float4 _MainTex_TexelSize;//Vector4(1 / width, 1 / height, width, height)
 			
-			fixed4 frag (v2f i) : SV_Target
+			float4 frag (v2f i) : SV_Target
 			{
 				float lh = DecodeHeight(tex2D(_MainTex, i.uv + float2(-_MainTex_TexelSize.x, 0.0)));
 				float rh = DecodeHeight(tex2D(_MainTex, i.uv + float2(_MainTex_TexelSize.x, 0.0)));

@@ -32,7 +32,7 @@
 
 			sampler2D _MainTex;
 			sampler2D _PreTex;
-			half4 _WaveParams;
+			float4 _WaveParams;
 			
 			v2f vert (appdata v)
 			{
@@ -42,7 +42,7 @@
 				return o;
 			}
 			
-			fixed4 frag (v2f i) : SV_Target
+			float4 frag (v2f i) : SV_Target
 			{
 				float cur = _WaveParams.x*DecodeHeight(tex2D(_MainTex, i.uv));
 				float rg = _WaveParams.z*

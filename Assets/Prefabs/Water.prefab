@@ -70,7 +70,7 @@ Transform:
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 1623687497035066}
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: -0.12, y: 0, z: 0.08}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
   - {fileID: 4773415176013616}
@@ -174,7 +174,7 @@ MonoBehaviour:
   length: 9
   cellSize: 0.1
   depth: 4.6
-  material: {fileID: 2100000, guid: 970a389ba39ecb44b8c1ce961104493d, type: 2}
+  material: {fileID: 2100000, guid: 698d75988f8b6db4a8d905a2658cac94, type: 2}
 --- !u!114 &114608972004171434
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -208,8 +208,13 @@ MonoBehaviour:
   material: {fileID: 2100000, guid: 970a389ba39ecb44b8c1ce961104493d, type: 2}
   depth: 4.6
   MapSize: 128
-  Velocity: 1
-  Viscosity: 0.894
+  Velocity: 0.8
+  Viscosity: 0.84
+  waveEquationShader: {fileID: 4800000, guid: cf7868a9f3dab4143b12b3e91f9f5967, type: 3}
+  normalGenerateShader: {fileID: 4800000, guid: e1b474b4cdd9c184a9235735a3b99d14,
+    type: 3}
+  forceShader: {fileID: 4800000, guid: cf78a4d8b76ee934fa6bdb284ce6088d, type: 3}
+  forceFactor: 1
 --- !u!124 &124242931751583312
 Behaviour:
   m_ObjectHideFlags: 1

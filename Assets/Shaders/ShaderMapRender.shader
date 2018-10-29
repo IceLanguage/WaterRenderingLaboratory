@@ -28,9 +28,9 @@
 				return o;
 			}
 			
-			fixed4 frag (v2f i) : SV_Target
+			float4 frag (v2f i) : SV_Target
 			{
-				fixed4 col = EncodeFloatRGBA(i.depth);
+				float4 col = EncodeFloatRGBA(i.depth);
 				return col;
 			}
 			ENDCG
