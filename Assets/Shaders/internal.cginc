@@ -11,6 +11,10 @@ float4 internalProjectionParams;
 float internalBias;
 sampler2D internalShadowMap;
 
+//WaterCamera.cs
+sampler2D _WaterHeightMap;
+sampler2D _WaterNormalMap;
+
 float DecodeHeight(float4 rgba) 
 {
 	float d1 = DecodeFloatRG(rgba.rg);

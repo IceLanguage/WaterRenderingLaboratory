@@ -32,8 +32,6 @@
 				UNITY_FOG_COORDS(1)
 			};
 
-			sampler2D _WaterHeightMap;
-			sampler2D _WaterNormalMap;
 			float _RayStep;
 			float _Height;
 			float4 _MainColor;

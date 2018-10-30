@@ -54,17 +54,17 @@
 			float _Gloss;
 			float _Specular;
 			float _Diffuse;
-			float4 _BaseColor;
-			float4 _WaterColor;
 			float _Range;
 			float _Refract;
 			float _Height;
+
+			float4 _BaseColor;
+			float4 _WaterColor;
+			
 			float4 _Fresnel;
 			
 			sampler2D _GrabTexture;
 			sampler2D _CameraDepthTexture;
-			sampler2D _WaterHeightMap;
-			sampler2D _WaterNormalMap;
 			sampler2D _WaterReflectTexture;
 
 			v2f vert(appdata_full v)
