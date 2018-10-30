@@ -85,9 +85,6 @@
 
 				//从顶点着色输出雾数据
 				UNITY_TRANSFER_FOG(o,o.vertex);
-
-				COMPUTE_EYEDEPTH(o.proj0.z);
-
 				
 				float3 worldPos = mul(unity_ObjectToWorld, v.vertex).xyz;
 				float3 worldNormal = UnityObjectToWorldNormal(v.normal);
@@ -110,7 +107,7 @@
 				float3 lightDir = normalize(internalWorldLightDir.xyz);
 				float3 viewDir = normalize(UnityWorldSpaceViewDir(worldPos));
 
-				float2 projUv = i.proj0.xy / i.proj0.zw + normal.xy * _Refract;
+				float2 projUv = i.proj0.xy / i.proj0.w + normal.xy * _Refract;
 				float4 col = tex2D(_GrabTexture, projUv);
 				float4 reflcol = tex2D(_WaterReflectTexture, projUv);
 				col.rgb *= _BaseColor.rgb;
