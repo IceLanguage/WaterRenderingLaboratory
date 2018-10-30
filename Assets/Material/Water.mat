@@ -78,14 +78,14 @@ Material:
     - _BumpScale: 1
     - _Cutoff: 0.5
     - _DetailNormalMapScale: 1
-    - _Diffuse: 1.17
+    - _Diffuse: 0.73
     - _Distortion: 0
     - _DstBlend: 0
     - _Gloss: 0.48
     - _GlossMapScale: 1
     - _Glossiness: 0.5
     - _GlossyReflections: 1
-    - _Height: 1.88
+    - _Height: 4
     - _Metallic: 0
     - _Mode: 0
     - _OcclusionStrength: 1
@@ -111,4 +111,4 @@ Material:
     - _Fresnel: {r: 0, g: 1.45, b: 3.4, a: 0}
     - _Range: {r: 0, g: 5, b: 0, a: 0}
     - _ShallowColor: {r: 0.16176468, g: 1, b: 0.51440156, a: 1}
-    - _WaterColor: {r: 0.08088237, g: 0.35344827, b: 1, a: 1}
+    - _WaterColor: {r: 0.08088237, g: 0.39148086, b: 1, a: 1}

@@ -17,10 +17,47 @@ namespace LinHowe.WaterRender
 
         private void Start()
         {
+            if(material == null)
+            {
+                Debug.LogError("Please add material");
+                return;
+            }
             InitComponent();
             InitMesh();
+            InitMat();
         }
 
+        private void InitMat()
+        {
+            //水体包围盒
+            Vector3 BoundingBoxMin = new Vector3
+                (
+                    transform.position.x - width * 0.5f,
+                    transform.position.y - depth,
+                    transform.position.z - length * 0.5f
+                );
+            Vector3 BoundingBoxMax = new Vector3
+                (
+                    transform.position.x + width * 0.5f,
+                    transform.position.y,
+                    transform.position.z + length * 0.5f
+                );
+
+            //水体平面
+            Vector4 WaterPlane = 
+                new Vector4
+                (   
+                    0, 1, 0, 
+                    Vector3.Dot(new Vector3(0, 1, 0), transform.position)          
+                );
+
+            Vector3 BoundingBoxSize = BoundingBoxMax - BoundingBoxMin;
+
+            material.SetVector("_BoundingBoxMin", BoundingBoxMin);
+            material.SetVector("_BoundingBoxMax", BoundingBoxMax);
+            material.SetVector("_BoundingBoxSize", BoundingBoxSize);
+            material.SetVector("_WaterPlane", WaterPlane);
+        }
         private void InitComponent()
         {
             mr = gameObject.GetComponent<MeshRenderer>();
