@@ -15,6 +15,10 @@ sampler2D internalShadowMap;
 sampler2D _WaterHeightMap;
 sampler2D _WaterNormalMap;
 
+//WaterBody.cs
+float4 _BoundingBoxMin;
+float4 _BoundingBoxMax;
+
 float DecodeHeight(float4 rgba) 
 {
 	float d1 = DecodeFloatRG(rgba.rg);

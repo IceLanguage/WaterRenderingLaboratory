@@ -7,6 +7,8 @@
 		_Gloss("Gloss", float) = 0
 		_Specular("Specular", float) = 0
 		_Diffuse("Diffuse", float) = 0
+		_WaterColor("WaterColor", color) = (1,1,1,1)
+
 	}
 	SubShader
 	{
@@ -30,15 +32,17 @@
 				UNITY_FOG_COORDS(1)
 				float4 TW0 : TEXCOORD2;
 				float4 TW1 : TEXCOORD3;
-				float4 TW2 : TEXCOORD4;
-				
+				float4 TW2 : TEXCOORD4;		
 			};
+
 			float _Gloss;
 			float _Specular;
 			float _Diffuse;
 
 			sampler2D _MainTex;
 			sampler2D _BumpTex;
+
+			float4 _WaterColor;
 
 			v2f vert (appdata_full v)
 			{
@@ -56,6 +60,17 @@
 				return o;
 			}
 			
+			float Clip(float3 worldPos)
+			{
+				if (worldPos.x < _BoundingBoxMin.x || worldPos.x > _BoundingBoxMax.x)
+					return 0;
+				if (worldPos.y < _BoundingBoxMin.y || worldPos.y > _BoundingBoxMax.y)
+					return 0;
+				if (worldPos.z < _BoundingBoxMin.z || worldPos.z > _BoundingBoxMax.z)
+					return 0;
+				return 1;
+			}
+
 			float4 frag (v2f i) : SV_Target
 			{
 				float3 normal = UnpackNormal(tex2D(_BumpTex, i.uv));
@@ -75,6 +90,12 @@
 				float3 specular = internalWorldLightColor.rgb * pow(ndh, _Specular*128.0)*_Gloss;
 
 				col.rgb *= diffuse + specular;
+
+				//裁剪水底部分
+				float clip = Clip(worldPos);
+				if(clip == 1)
+					col *= _WaterColor;	
+
 				UNITY_APPLY_FOG(i.fogCoord, col);
 				return col;
 			}

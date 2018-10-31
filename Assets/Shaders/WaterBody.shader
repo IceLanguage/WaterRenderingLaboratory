@@ -35,8 +35,7 @@
 			float _RayStep;
 			float _Height;
 			float4 _MainColor;
-			float4 _BoundingBoxMin;
-			float4 _BoundingBoxMax;
+			
 			float4 _WaterPlane;
 			float4 _BoundingBoxSize;
 			

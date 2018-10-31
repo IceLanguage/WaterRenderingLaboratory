@@ -53,8 +53,8 @@ namespace LinHowe.WaterRender
 
             Vector3 BoundingBoxSize = BoundingBoxMax - BoundingBoxMin;
 
-            material.SetVector("_BoundingBoxMin", BoundingBoxMin);
-            material.SetVector("_BoundingBoxMax", BoundingBoxMax);
+            Shader.SetGlobalVector("_BoundingBoxMin", BoundingBoxMin);
+            Shader.SetGlobalVector("_BoundingBoxMax", BoundingBoxMax);
             material.SetVector("_BoundingBoxSize", BoundingBoxSize);
             material.SetVector("_WaterPlane", WaterPlane);
         }
