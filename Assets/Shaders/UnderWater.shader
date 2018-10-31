@@ -8,7 +8,6 @@
 		_Specular("Specular", float) = 0
 		_Diffuse("Diffuse", float) = 0
 		_WaterColor("WaterColor", color) = (1,1,1,1)
-
 	}
 	SubShader
 	{
@@ -23,7 +22,6 @@
 			
 			#include "UnityCG.cginc"
 			#include "internal.cginc"
-			#include "Lighting.cginc"
 
 			struct v2f
 			{
@@ -32,7 +30,9 @@
 				UNITY_FOG_COORDS(1)
 				float4 TW0 : TEXCOORD2;
 				float4 TW1 : TEXCOORD3;
-				float4 TW2 : TEXCOORD4;		
+				float4 TW2 : TEXCOORD4;	
+				float4 shadowProj : TEXCOORD5;
+				float shadowDepth : TEXCOORD6;
 			};
 
 			float _Gloss;
@@ -49,6 +49,10 @@
 				v2f o;
 				o.vertex = UnityObjectToClipPos(v.vertex);
 				o.uv = v.texcoord;
+
+				UNITY_TRANSFER_FOG(o,o.vertex);
+				
+
 				float3 worldPos = mul(unity_ObjectToWorld, v.vertex).xyz;
 				float3 worldNormal = UnityObjectToWorldNormal(v.normal);
 				float3 worldTan = UnityObjectToWorldDir(v.tangent.xyz);
@@ -57,6 +61,14 @@
 				o.TW0 = float4(worldTan.x, worldBinormal.x, worldNormal.x, worldPos.x);
 				o.TW1 = float4(worldTan.y, worldBinormal.y, worldNormal.y, worldPos.y);
 				o.TW2 = float4(worldTan.z, worldBinormal.z, worldNormal.z, worldPos.z);
+
+				float4 cpos = mul(internalWorldLightMV, mul(unity_ObjectToWorld, v.vertex)); 
+				o.shadowProj = mul(internalWorldLightVP, cpos); 
+				float4 pj = o.shadowProj * 0.5f; 
+				pj.xy = float2(pj.x, pj.y) + pj.w; 
+				pj.zw = o.shadowProj.zw; 
+				o.shadowProj = pj; 
+				o.shadowDepth = -cpos.z * internalProjectionParams.w;
 				return o;
 			}
 			
@@ -91,10 +103,18 @@
 
 				col.rgb *= diffuse + specular;
 
+				float4 shadow = tex2Dproj(internalShadowMap, i.shadowProj); 
+				float shadowdepth = DecodeFloatRGBA(shadow); 
+				float shadowcol = step(i.shadowDepth - internalBias, shadowdepth)*0.7 + 0.3; 
+				float2 uv = 0.5 - abs(i.shadowProj.xy / i.shadowProj.w - 0.5);
+				float2 shadowatten = saturate(uv / (1 - internalWorldLightColor.a)); 
+				float atten = shadowatten.x*shadowatten.y*shadowcol;
+				col *= atten;
+
 				//裁剪水底部分
 				float clip = Clip(worldPos);
 				if(clip == 1)
-					col *= _WaterColor;	
+					col *= _WaterColor;
 
 				UNITY_APPLY_FOG(i.fogCoord, col);
 				return col;

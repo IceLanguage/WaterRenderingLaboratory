@@ -80,7 +80,8 @@
 					float3 normal = UnpackNormal(tex2D(_WaterNormalMap, uv));
 					float diffuse = saturate(dot( -lightDir ,normal ) ) ;
 					float isClip = ClipInBoundingBox(p);
-					col += _MainColor * lightDeltaColor * isClip * diffuse;
+					
+					col += _MainColor * lightDeltaColor * isClip * diffuse ;
 				}
 				UNITY_APPLY_FOG(i.fogCoord, col);
 				return col ;

@@ -50,6 +50,7 @@
 				float4 TW2 : TEXCOORD5;
 
 				float4 vertex : SV_POSITION;
+
 			};
 			float _Gloss;
 			float _Specular;
@@ -94,6 +95,8 @@
 				o.TW0 = float4(worldTan.x, worldBinormal.x, worldNormal.x, worldPos.x);
 				o.TW1 = float4(worldTan.y, worldBinormal.y, worldNormal.y, worldPos.y);
 				o.TW2 = float4(worldTan.z, worldBinormal.z, worldNormal.z, worldPos.z);
+
+				
 
 				return o;
 			}

@@ -25,7 +25,6 @@ namespace LinHowe.WaterRender
         private Camera m_Camera;
         private RenderTexture m_ShadowMap;
 
-        private Mesh m_BGMesh;
         private Material m_BGMaterial;
 
         void Start()
@@ -81,18 +80,6 @@ namespace LinHowe.WaterRender
                 Shader.SetGlobalTexture("internalShadowMap", m_ShadowMap);
             }
 
-            m_BGMesh = new Mesh
-            {
-                vertices = new Vector3[]
-                {
-                new Vector3(-aspect * size, -size, far - 0.01f), new Vector3(-aspect * size, size, far - 0.01f),
-                new Vector3(aspect * size, size, far - 0.01f), new Vector3(aspect * size, -size, far - 0.01f)
-                },
-                triangles = new int[]
-                {
-                0, 1, 2, 0, 2, 3
-                }
-            };
         }
 
         void OnDrawGizmos()

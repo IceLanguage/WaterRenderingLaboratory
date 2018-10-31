@@ -36,4 +36,5 @@ float4 EncodeHeight(float height) {
 
 	return float4(rg, ba);
 }
+
 #endif
