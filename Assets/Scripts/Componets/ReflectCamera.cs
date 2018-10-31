@@ -39,7 +39,7 @@ namespace LinHowe.WaterRender
             if(MirrorTexture) RenderTexture.ReleaseTemporary(MirrorTexture);
             
         }
-        private void CopyCamera(Camera src, Camera dest)
+        private static void CopyCamera(Camera src, Camera dest)
         {
 
             dest.clearFlags = src.clearFlags;
@@ -60,7 +60,7 @@ namespace LinHowe.WaterRender
         /// </summary>
         /// <param name="reflectionMatrix"></param>
         /// <param name="plane"></param>
-        private void CalculateReflectionMatrix(ref Matrix4x4 reflectionMatrix, Vector4 plane)
+        private static void CalculateReflectionMatrix(ref Matrix4x4 reflectionMatrix, Vector4 plane)
         {
             reflectionMatrix.m00 = (1F - 2F * plane[0] * plane[0]);
             reflectionMatrix.m01 = (-2F * plane[0] * plane[1]);
@@ -83,7 +83,7 @@ namespace LinHowe.WaterRender
             reflectionMatrix.m33 = 1F;
         }
 
-        private float SignExt(float a)
+        private static float SignExt(float a)
         {
             if (a > 0.0f) return 1.0f;
             if (a < 0.0f) return -1.0f;
@@ -96,7 +96,7 @@ namespace LinHowe.WaterRender
         /// </summary>
         /// <param name="projection"></param>
         /// <param name="clipPlane"></param>
-        private void CalculateObliqueMatrix(ref Matrix4x4 projection, Vector4 clipPlane)
+        private static void CalculateObliqueMatrix(ref Matrix4x4 projection, Vector4 clipPlane)
         {
             Vector4 q = projection.inverse * new Vector4(SignExt(clipPlane.x), SignExt(clipPlane.y), 1.0f, 1.0f);
             Vector4 c = clipPlane * (2.0F / (Vector4.Dot(clipPlane, q)));

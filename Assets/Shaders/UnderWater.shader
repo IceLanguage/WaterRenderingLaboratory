@@ -3,6 +3,7 @@
 	Properties
 	{
 		_MainTex ("Texture", 2D) = "white" {}
+		_BumpMap ("Normal Map", 2D) = "bump" { }
 		_Gloss("Gloss", float) = 0
 		_Specular("Specular", float) = 0
 		_Diffuse("Diffuse", float) = 0
@@ -35,7 +36,10 @@
 			float _Gloss;
 			float _Specular;
 			float _Diffuse;
+
 			sampler2D _MainTex;
+			sampler2D _BumpTex;
+
 			v2f vert (appdata_full v)
 			{
 				v2f o;
@@ -54,7 +58,7 @@
 			
 			float4 frag (v2f i) : SV_Target
 			{
-				float3 normal = UnpackNormal(tex2D(_WaterNormalMap, i.uv));
+				float3 normal = UnpackNormal(tex2D(_BumpTex, i.uv));
 				float3 worldNormal = float3(dot(i.TW0.xyz, normal), dot(i.TW1.xyz, normal), dot(i.TW2.xyz, normal));
 				float3 worldPos = float3(i.TW0.w, i.TW1.w, i.TW2.w);
 				float3 lightDir = normalize(internalWorldLightDir.xyz);
@@ -70,6 +74,7 @@
 				float ndh = saturate(dot(worldNormal, halfdir));
 				float3 specular = internalWorldLightColor.rgb * pow(ndh, _Specular*128.0)*_Gloss;
 
+				col.rgb *= diffuse + specular;
 				UNITY_APPLY_FOG(i.fogCoord, col);
 				return col;
 			}
