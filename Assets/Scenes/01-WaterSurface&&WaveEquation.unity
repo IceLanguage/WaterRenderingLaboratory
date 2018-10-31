@@ -198,11 +198,16 @@ Prefab:
     - target: {fileID: 114462551540829376, guid: f39f0165b9b52a142b920894bea80ea4,
         type: 2}
       propertyPath: color.r
-      value: 0.90344834
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 114462551540829376, guid: f39f0165b9b52a142b920894bea80ea4,
         type: 2}
       propertyPath: color.b
+      value: 0.4344826
+      objectReference: {fileID: 0}
+    - target: {fileID: 114462551540829376, guid: f39f0165b9b52a142b920894bea80ea4,
+        type: 2}
+      propertyPath: color.g
       value: 0
       objectReference: {fileID: 0}
     m_RemovedComponents: []
@@ -246,6 +251,26 @@ Prefab:
     - target: {fileID: 4512926232532318, guid: beece6563437af440bbcb7819af52716, type: 2}
       propertyPath: m_RootOrder
       value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 114029954623772442, guid: beece6563437af440bbcb7819af52716,
+        type: 2}
+      propertyPath: waveEquationShader
+      value: 
+      objectReference: {fileID: 4800000, guid: cf7868a9f3dab4143b12b3e91f9f5967, type: 3}
+    - target: {fileID: 114029954623772442, guid: beece6563437af440bbcb7819af52716,
+        type: 2}
+      propertyPath: normalGenerateShader
+      value: 
+      objectReference: {fileID: 4800000, guid: e1b474b4cdd9c184a9235735a3b99d14, type: 3}
+    - target: {fileID: 114029954623772442, guid: beece6563437af440bbcb7819af52716,
+        type: 2}
+      propertyPath: forceShader
+      value: 
+      objectReference: {fileID: 4800000, guid: cf78a4d8b76ee934fa6bdb284ce6088d, type: 3}
+    - target: {fileID: 114029954623772442, guid: beece6563437af440bbcb7819af52716,
+        type: 2}
+      propertyPath: forceFactor
+      value: 1
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 100100000, guid: beece6563437af440bbcb7819af52716, type: 2}
