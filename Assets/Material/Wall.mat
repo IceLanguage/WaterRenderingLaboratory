@@ -58,9 +58,9 @@ Material:
     - _BumpScale: 1
     - _Cutoff: 0.5
     - _DetailNormalMapScale: 1
-    - _Diffuse: 0.88
+    - _Diffuse: 1.23
     - _DstBlend: 0
-    - _Gloss: 2.09
+    - _Gloss: 16.15
     - _GlossMapScale: 1
     - _Glossiness: 0.5
     - _GlossyReflections: 1
@@ -69,7 +69,7 @@ Material:
     - _OcclusionStrength: 1
     - _Parallax: 0.02
     - _SmoothnessTextureChannel: 0
-    - _Specular: 0.5
+    - _Specular: 0.52
     - _SpecularHighlights: 1
     - _SrcBlend: 1
     - _UVSec: 0
