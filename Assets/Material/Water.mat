@@ -108,7 +108,7 @@ Material:
     - _DeepColor: {r: 0.15819634, g: 0.5705833, b: 0.97794116, a: 1}
     - _Diffuse: {r: 0.9632353, g: 0.9632353, b: 0.9632353, a: 1}
     - _EmissionColor: {r: 0, g: 0, b: 0, a: 1}
-    - _Fresnel: {r: 0.05, g: 2.14, b: 3.4, a: 0}
+    - _Fresnel: {r: -0.11, g: 1.28, b: 3.14, a: 0}
     - _Range: {r: 0, g: 5, b: 0, a: 0}
     - _ShallowColor: {r: 0.16176468, g: 1, b: 0.51440156, a: 1}
     - _WaterColor: {r: 0.08088237, g: 0.39148086, b: 1, a: 1}
