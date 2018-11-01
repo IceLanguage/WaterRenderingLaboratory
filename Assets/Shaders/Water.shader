@@ -82,10 +82,11 @@
 				v.vertex.y += height * _Height;
 
 				o.uv = v.texcoord;
-				o.vertex =  UnityObjectToClipPos(v.vertex);
-
 				//从顶点着色输出雾数据
 				UNITY_TRANSFER_FOG(o,o.vertex);
+				o.vertex =  UnityObjectToClipPos(v.vertex);
+
+				
 				
 				float3 worldPos = mul(unity_ObjectToWorld, v.vertex).xyz;
 				float3 worldNormal = UnityObjectToWorldNormal(v.normal);
@@ -132,6 +133,7 @@
 				float f = clamp(bias + pow(1 - saturate(dot(worldNormal, viewDir)),power) * scale, 0.0, 1.0);
 				col.rgb = lerp(col.rgb ,diffuse + reflcol.rgb, f);
 				col.rgb += specular;
+
 
 				//水波突出
 				col.rgb += _WaterColor.rgb * (height*_Range);

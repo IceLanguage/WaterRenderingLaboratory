@@ -110,6 +110,12 @@ NavMeshSettings:
     tileSize: 256
     accuratePlacement: 0
   m_NavMeshData: {fileID: 0}
+--- !u!114 &501959 stripped
+MonoBehaviour:
+  m_PrefabParentObject: {fileID: 114859584621364724, guid: 6fed62f6ee9488149878f7b530fe7679,
+    type: 2}
+  m_PrefabInternal: {fileID: 980535006}
+  m_Script: {fileID: 11500000, guid: 32d68a9644d8cb64593e6c7fbb7c238f, type: 3}
 --- !u!1001 &202461435
 Prefab:
   m_ObjectHideFlags: 0
@@ -163,6 +169,11 @@ Prefab:
       propertyPath: m_LocalEulerAnglesHint.y
       value: 34
       objectReference: {fileID: 0}
+    - target: {fileID: 114462551540829376, guid: f39f0165b9b52a142b920894bea80ea4,
+        type: 2}
+      propertyPath: shadowMapRenderShader
+      value: 
+      objectReference: {fileID: 4800000, guid: 5cd80f6ec2f217a4abc8c0bbe5b87132, type: 3}
     m_RemovedComponents:
     - {fileID: 108109447153778836, guid: f39f0165b9b52a142b920894bea80ea4, type: 2}
   m_ParentPrefab: {fileID: 100100000, guid: f39f0165b9b52a142b920894bea80ea4, type: 2}
@@ -178,8 +189,9 @@ GameObject:
   - component: {fileID: 680775856}
   - component: {fileID: 680775855}
   - component: {fileID: 680775854}
+  - component: {fileID: 680775858}
   m_Layer: 0
-  m_Name: Cube
+  m_Name: Stone
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -235,7 +247,7 @@ MeshFilter:
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 0}
   m_GameObject: {fileID: 680775853}
-  m_Mesh: {fileID: 10202, guid: 0000000000000000e000000000000000, type: 0}
+  m_Mesh: {fileID: 10207, guid: 0000000000000000e000000000000000, type: 0}
 --- !u!4 &680775857
 Transform:
   m_ObjectHideFlags: 0
@@ -249,6 +261,19 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 3
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &680775858
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 680775853}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 91918416e00db664f86475665a8f5f1a, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  waterSurfacesList:
+  - {fileID: 501959}
 --- !u!1001 &980535006
 Prefab:
   m_ObjectHideFlags: 0

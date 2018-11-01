@@ -25,7 +25,7 @@ namespace LinHowe.WaterRender
         private Vector4 waveParams; //波形参数
 
         private float d;//单元间隔
-        public WaterCamera Camera { get; set; }
+        public WaterCamera M_Camera { get; set; }
 
         void Start()
         {
@@ -44,22 +44,27 @@ namespace LinHowe.WaterRender
 
         public void DrawMesh(Mesh mesh, Matrix4x4 matrix)
         {
-            if (Camera)
-                Camera.ForceDrawMesh(mesh, matrix);
+            if (M_Camera)
+                M_Camera.ForceDrawMesh(mesh, matrix);
+        }
+        public void DrawObject(Renderer renderer)
+        {
+            if (M_Camera)
+                M_Camera.ForceDrawRenderer(renderer);
         }
         private void InitWaterCamera()
         {
-            Camera = new GameObject("[WaterCamera]").AddComponent<WaterCamera>();
-            Camera.transform.SetParent(transform);
-            Camera.transform.localPosition = Vector3.zero;
-            Camera.transform.localEulerAngles = new Vector3(90, 0, 0);
+            M_Camera = new GameObject("[WaterCamera]").AddComponent<WaterCamera>();
+            M_Camera.transform.SetParent(transform);
+            M_Camera.transform.localPosition = Vector3.zero;
+            M_Camera.transform.localEulerAngles = new Vector3(90, 0, 0);
             if(null == waveEquationShader||null == normalGenerateShader || null == forceShader)
             {
                 Debug.LogError("请配置波动方程所需要的shader");
                 return;
             }
-            Camera.InitMat(waveEquationShader, normalGenerateShader, forceShader);
-            Camera.Init(width, length, depth, MapSize, waveParams);
+            M_Camera.InitMat(waveEquationShader, normalGenerateShader, forceShader);
+            M_Camera.Init(width, length, depth, MapSize, waveParams);
         }
 
         private void InitComponent()
