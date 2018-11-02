@@ -6,6 +6,7 @@ namespace LinHowe.WaterRender
     /// <summary>
     /// 平行光-用于渲染和投射阴影
     /// </summary>
+    
     [RequireComponent(typeof(Camera))]
     public class SunLight : MonoBehaviour
     {

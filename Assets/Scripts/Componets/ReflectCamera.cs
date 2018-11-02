@@ -5,6 +5,7 @@ namespace LinHowe.WaterRender
     /// <summary>
     /// 反射相机
     /// </summary>
+    
     public class ReflectCamera : MonoBehaviour
     {
         private RenderTexture MirrorTexture;//镜像纹理
@@ -32,6 +33,8 @@ namespace LinHowe.WaterRender
 
             m_camera.targetTexture = MirrorTexture;
             m_camera.cullingMask = ~(1 << 4) & -1;  //设置可以反射的物体
+
+            WaterMat.SetTexture("_WaterReflectTexture", MirrorTexture);
         }
 
         private void OnDestroy()
@@ -117,7 +120,8 @@ namespace LinHowe.WaterRender
             if (isRender) return;
             isRender = true;
 
-            WaterMat.SetTexture("_WaterReflectTexture", MirrorTexture);
+
+            
 
             Vector3 pos = transform.position;
             Vector3 normal = transform.up;

@@ -67,7 +67,8 @@
 			sampler2D _GrabTexture;
 			sampler2D _CameraDepthTexture;
 			sampler2D _WaterReflectTexture;
-
+			
+			float4 _GrabTexture_TexelSize;
 			v2f vert(appdata_full v)
 			{
 				v2f o;
@@ -86,8 +87,6 @@
 				UNITY_TRANSFER_FOG(o,o.vertex);
 				o.vertex =  UnityObjectToClipPos(v.vertex);
 
-				
-				
 				float3 worldPos = mul(unity_ObjectToWorld, v.vertex).xyz;
 				float3 worldNormal = UnityObjectToWorldNormal(v.normal);
 				float3 worldTan = UnityObjectToWorldDir(v.tangent.xyz);
@@ -96,8 +95,6 @@
 				o.TW0 = float4(worldTan.x, worldBinormal.x, worldNormal.x, worldPos.x);
 				o.TW1 = float4(worldTan.y, worldBinormal.y, worldNormal.y, worldPos.y);
 				o.TW2 = float4(worldTan.z, worldBinormal.z, worldNormal.z, worldPos.z);
-
-				
 
 				return o;
 			}
@@ -112,11 +109,11 @@
 				float3 viewDir = normalize(UnityWorldSpaceViewDir(worldPos));
 
 				float2 projUv = i.proj0.xy / i.proj0.w + normal.xy * _Refract;
-				float4 col = tex2D(_GrabTexture, projUv);
+				float4 col = tex2D(_GrabTexture,  projUv);
+
 				float4 reflcol = tex2D(_WaterReflectTexture, projUv);
 				col.rgb *= _BaseColor.rgb;
 				float height = max(DecodeHeight(tex2D(_WaterHeightMap, i.uv)),0);
-
 
 				//半兰伯特模型
 				float3 diffuse = internalWorldLightColor.rgb * saturate(0.5 * dot(worldNormal, lightDir) + 0.5) * _Diffuse;
@@ -131,7 +128,7 @@
 				//菲涅尔效果
 				float bias = _Fresnel.x,scale = _Fresnel.y,power =_Fresnel.z;
 				float f = clamp(bias + pow(1 - saturate(dot(worldNormal, viewDir)),power) * scale, 0.0, 1.0);
-				col.rgb = lerp(col.rgb ,diffuse + reflcol.rgb, f);
+				col.rgb = lerp(col.rgb,diffuse + reflcol.rgb, f);
 				col.rgb += specular;
 
 
@@ -140,7 +137,6 @@
 
 				//从顶点着色器中输出雾效数据，将第二个参数中的颜色值作为雾效的颜色值，且在正向附加渲染通道（forward-additive pass）中
 				UNITY_APPLY_FOG(i.fogCoord, col); 
-
 				col.a = 1.0;
 
 				return  col;

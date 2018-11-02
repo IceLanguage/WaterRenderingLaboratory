@@ -7,6 +7,7 @@ namespace LinHowe.WaterRender
     /// <summary>
     /// 用以获取水面的各种信息
     /// </summary>
+    
     public class WaterCamera:MonoBehaviour
     {
         private Camera m_Camera;

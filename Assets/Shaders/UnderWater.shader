@@ -49,6 +49,7 @@
 				v2f o;
 				o.vertex = UnityObjectToClipPos(v.vertex);
 				o.uv = v.texcoord;
+				
 
 				UNITY_TRANSFER_FOG(o,o.vertex);
 				
@@ -58,6 +59,7 @@
 				float3 worldTan = UnityObjectToWorldDir(v.tangent.xyz);
 				float tanSign = v.tangent.w * unity_WorldTransformParams.w;
 				float3 worldBinormal = cross(worldNormal, worldTan)*tanSign;
+
 				o.TW0 = float4(worldTan.x, worldBinormal.x, worldNormal.x, worldPos.x);
 				o.TW1 = float4(worldTan.y, worldBinormal.y, worldNormal.y, worldPos.y);
 				o.TW2 = float4(worldTan.z, worldBinormal.z, worldNormal.z, worldPos.z);
@@ -69,25 +71,20 @@
 				pj.zw = o.shadowProj.zw; 
 				o.shadowProj = pj; 
 				o.shadowDepth = -cpos.z * internalProjectionParams.w;
+
+				
+					
 				return o;
 			}
 			
-			float Clip(float3 worldPos)
-			{
-				if (worldPos.x < _BoundingBoxMin.x || worldPos.x > _BoundingBoxMax.x)
-					return 0;
-				if (worldPos.y < _BoundingBoxMin.y || worldPos.y > _BoundingBoxMax.y)
-					return 0;
-				if (worldPos.z < _BoundingBoxMin.z || worldPos.z > _BoundingBoxMax.z)
-					return 0;
-				return 1;
-			}
+			
 
 			float4 frag (v2f i) : SV_Target
 			{
+				float3 worldPos = float3(i.TW0.w, i.TW1.w, i.TW2.w);
 				float3 normal = UnpackNormal(tex2D(_BumpTex, i.uv));
 				float3 worldNormal = float3(dot(i.TW0.xyz, normal), dot(i.TW1.xyz, normal), dot(i.TW2.xyz, normal));
-				float3 worldPos = float3(i.TW0.w, i.TW1.w, i.TW2.w);
+				
 				float3 lightDir = normalize(internalWorldLightDir.xyz);
 				float3 viewDir = normalize(UnityWorldSpaceViewDir(worldPos));
 

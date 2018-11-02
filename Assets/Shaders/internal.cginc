@@ -19,6 +19,16 @@ sampler2D _WaterNormalMap;
 float4 _BoundingBoxMin;
 float4 _BoundingBoxMax;
 
+float Clip(float3 worldPos)
+{
+	if (worldPos.x < _BoundingBoxMin.x || worldPos.x > _BoundingBoxMax.x)
+		return 0;
+	if (worldPos.y < _BoundingBoxMin.y || worldPos.y > _BoundingBoxMax.y)
+		return 0;
+	if (worldPos.z < _BoundingBoxMin.z || worldPos.z > _BoundingBoxMax.z)
+		return 0;
+	return 1;
+}
 float DecodeHeight(float4 rgba) 
 {
 	float d1 = DecodeFloatRG(rgba.rg);
