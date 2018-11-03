@@ -18,6 +18,7 @@ namespace LinHowe.WaterRender
         public float Viscosity = 0.894f;//粘度系数
         public Shader waveEquationShader, normalGenerateShader, forceShader;
         public float forceFactor;
+        public float Density = 1f;
         private MeshRenderer mr;
         private MeshFilter mf;
         private Mesh mesh;
@@ -25,8 +26,17 @@ namespace LinHowe.WaterRender
         private Vector4 waveParams; //波形参数
 
         private float d;//单元间隔
-        public WaterCamera M_Camera { get; set; }
 
+        private int xsize, ysize;
+        private float xcellsize, uvxcellsize, ycellsize, uvycellsize;
+        public WaterCamera M_Camera { get; set; }
+        public void CalculateUV(Vector3 worldPos,out float u,out float v)
+        {
+            float xzero = -width * 0.5f;
+            float zzero = -length * 0.5f;
+            u = (worldPos.x - xzero) / xcellsize * uvxcellsize;
+            v = (worldPos.z - zzero) / ycellsize * uvycellsize;
+        }
         void Start()
         {
             gameObject.AddComponent<ReflectCamera>();
@@ -146,15 +156,15 @@ namespace LinHowe.WaterRender
         }
         private void InitMesh()
         {
-            int xsize = Mathf.RoundToInt(width / cellSize);
-            int ysize = Mathf.RoundToInt(length / cellSize);
+            xsize = Mathf.RoundToInt(width / cellSize);
+            ysize = Mathf.RoundToInt(length / cellSize);
 
             mesh = new Mesh();
 
-            float xcellsize = width / xsize;
-            float uvxcellsize = 1.0f / xsize;
-            float ycellsize = length / ysize;
-            float uvycellsize = 1.0f / ysize;
+            xcellsize = width / xsize;
+            uvxcellsize = 1.0f / xsize;
+            ycellsize = length / ysize;
+            uvycellsize = 1.0f / ysize;
 
             int ListCapacity = (ysize + 1) * (xsize + 1);
             List<Vector3> vertexList = new List<Vector3>(ListCapacity);

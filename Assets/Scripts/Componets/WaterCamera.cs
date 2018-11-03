@@ -20,7 +20,27 @@ namespace LinHowe.WaterRender
         private Material normalGenerateMat;//法线生成材质
         private Material forceMat;//力的材质
         private CommandBuffer m_CommandBuffer;
+        public Texture2D CurNormalMap
+        {
+            get
+            {
+                return GetTexture2d(NormalMap);
+            }
+        }
 
+        private Texture2D GetTexture2d(RenderTexture renderTexture)
+        {
+            if (renderTexture == null)
+                return null;
+
+            int width = renderTexture.width;
+            int height = renderTexture.height;
+            Texture2D tex2d = new Texture2D(width, height, TextureFormat.ARGB32, false);
+            RenderTexture.active = renderTexture;
+            tex2d.ReadPixels(new Rect(0, 0, width, height), 0, 0);
+            tex2d.Apply();
+            return tex2d;
+        }
         public void InitMat(Shader waveEquationShader, Shader normalGenerateShader, Shader forceShader)
         {
             if (waveEquationShader) waveEquationMat = new Material(waveEquationShader);
@@ -178,6 +198,7 @@ namespace LinHowe.WaterRender
 
             Shader.SetGlobalTexture("_WaterHeightMap", HeightMap);
             Shader.SetGlobalTexture("_WaterNormalMap", NormalMap);
+            
         }
 
         private void OnDestroy()
