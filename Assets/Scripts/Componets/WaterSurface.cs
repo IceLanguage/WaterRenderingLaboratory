@@ -29,14 +29,67 @@ namespace LinHowe.WaterRender
 
         private int xsize, ysize;
         private float xcellsize, uvxcellsize, ycellsize, uvycellsize;
+        private List<Vector3> vertexList;
         public WaterCamera M_Camera { get; set; }
-        public void CalculateUV(Vector3 worldPos,out float u,out float v)
+        //public void CalculateUV(Vector3 worldPos,out float u,out float v)
+        //{
+        //    float xzero = -width * 0.5f;
+        //    float zzero = -length * 0.5f;
+        //    u = (worldPos.x - xzero) / xcellsize * uvxcellsize;
+        //    v = (worldPos.z - zzero) / ycellsize * uvycellsize;
+        //}
+
+        public Vector3 GetSurfaceNormal(Vector3 worldPoint)
         {
-            float xzero = -width * 0.5f;
-            float zzero = -length * 0.5f;
-            u = (worldPos.x - xzero) / xcellsize * uvxcellsize;
-            v = (worldPos.z - zzero) / ycellsize * uvycellsize;
+            Vector3[] meshPolygon = this.GetSurroundingTrianglePolygon(worldPoint);
+            if (meshPolygon != null)
+            {
+                Vector3 planeV1 = meshPolygon[1] - meshPolygon[0];
+                Vector3 planeV2 = meshPolygon[2] - meshPolygon[0];
+                Vector3 planeNormal = Vector3.Cross(planeV1, planeV2).normalized;
+                if (planeNormal.y < 0f)
+                {
+                    planeNormal *= -1f;
+                }
+
+                return planeNormal;
+            }
+
+            return this.transform.up;
         }
+        public Vector3[] GetSurroundingTrianglePolygon(Vector3 worldPoint)
+        {
+            System.Func<int, int, int> GetIndex = (a, b) =>
+            {
+                return b * (this.xsize + 1) + a;
+            };
+            Vector3 localPoint = this.transform.InverseTransformPoint(worldPoint);
+            int x = Mathf.CeilToInt((localPoint.x + width/2f)/ xcellsize);
+            int z = Mathf.CeilToInt((localPoint.z + length / 2f) / ycellsize);
+            if (x <= 0 || z <= 0 || x >= (xsize + 1) || z >= (ysize + 1))
+            {
+                return null;
+            }
+
+            Vector3[] trianglePolygon = new Vector3[3];
+            
+
+            if ((worldPoint - vertexList[GetIndex(x, z)]).sqrMagnitude <
+                ((worldPoint - vertexList[GetIndex(x - 1, z - 1)]).sqrMagnitude))
+            {
+                trianglePolygon[0] = vertexList[GetIndex(x, z)];
+            }
+            else
+            {
+                trianglePolygon[0] = vertexList[GetIndex(x - 1, z - 1)];
+            }
+
+            trianglePolygon[1] = vertexList[GetIndex(x - 1, z)];
+            trianglePolygon[2] = vertexList[GetIndex(x, z - 1)];
+
+            return trianglePolygon;
+        }
+
         void Start()
         {
             gameObject.AddComponent<ReflectCamera>();
@@ -167,7 +220,7 @@ namespace LinHowe.WaterRender
             uvycellsize = 1.0f / ysize;
 
             int ListCapacity = (ysize + 1) * (xsize + 1);
-            List<Vector3> vertexList = new List<Vector3>(ListCapacity);
+            vertexList = new List<Vector3>(ListCapacity);
             List<Vector2> uvList = new List<Vector2>(ListCapacity);
             List<Vector3> normalList = new List<Vector3>(ListCapacity);
             List<int> indexList = new List<int>(ListCapacity * 6);

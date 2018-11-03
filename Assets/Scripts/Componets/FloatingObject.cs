@@ -142,11 +142,7 @@ namespace LinHowe
                         submergedFactor = level;
                     submergedVolume += submergedFactor;
 
-                    Texture2D NormalMap = water.M_Camera.CurNormalMap;
-                    float u, v;
-                    water.CalculateUV(worldPoint, out u, out v);
-                    Color normal = NormalMap.GetPixelBilinear(u, v);
-                    Vector3 surfaceNormal = Vector3.Normalize(new Vector3(normal.r, normal.g, normal.b));
+                    Vector3 surfaceNormal = water.GetSurfaceNormal(worldPoint);
                     Quaternion surfaceRotation = Quaternion.FromToRotation(water.transform.up, surfaceNormal);
                     surfaceRotation = Quaternion.Slerp(surfaceRotation, Quaternion.identity, submergedFactor);
 
