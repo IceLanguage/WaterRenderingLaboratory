@@ -30,6 +30,7 @@ namespace LinHowe.WaterRender
         private int xsize, ysize;
         private float xcellsize, uvxcellsize, ycellsize, uvycellsize;
         private List<Vector3> vertexList;
+        private Vector3[] curVertexs;
         public WaterCamera M_Camera { get; set; }
         //public void CalculateUV(Vector3 worldPos,out float u,out float v)
         //{
@@ -55,14 +56,15 @@ namespace LinHowe.WaterRender
                 return planeNormal;
             }
 
-            return this.transform.up;
+            return transform.up;
+        }
+
+        private int GetIndex(int x,int z)
+        {
+            return z * (xsize + 1) + x;
         }
         public Vector3[] GetSurroundingTrianglePolygon(Vector3 worldPoint)
         {
-            System.Func<int, int, int> GetIndex = (a, b) =>
-            {
-                return b * (this.xsize + 1) + a;
-            };
             Vector3 localPoint = this.transform.InverseTransformPoint(worldPoint);
             int x = Mathf.CeilToInt((localPoint.x + width/2f)/ xcellsize);
             int z = Mathf.CeilToInt((localPoint.z + length / 2f) / ycellsize);
@@ -73,23 +75,30 @@ namespace LinHowe.WaterRender
 
             Vector3[] trianglePolygon = new Vector3[3];
             
-
             if ((worldPoint - vertexList[GetIndex(x, z)]).sqrMagnitude <
                 ((worldPoint - vertexList[GetIndex(x - 1, z - 1)]).sqrMagnitude))
             {
-                trianglePolygon[0] = vertexList[GetIndex(x, z)];
+                trianglePolygon[0] = curVertexs[GetIndex(x, z)];
             }
             else
             {
-                trianglePolygon[0] = vertexList[GetIndex(x - 1, z - 1)];
+                trianglePolygon[0] = curVertexs[GetIndex(x - 1, z - 1)];
             }
 
-            trianglePolygon[1] = vertexList[GetIndex(x - 1, z)];
-            trianglePolygon[2] = vertexList[GetIndex(x, z - 1)];
+            trianglePolygon[1] = curVertexs[GetIndex(x - 1, z)];
+            trianglePolygon[2] = curVertexs[GetIndex(x, z - 1)];
 
             return trianglePolygon;
         }
-
+        private void Update()
+        {
+            curVertexs = mesh.vertices;
+            int len = curVertexs.Length;
+            for (int i = 0;i<len;++i)
+            {
+                curVertexs[i] = transform.TransformPoint(curVertexs[i]);
+            }
+        }
         void Start()
         {
             gameObject.AddComponent<ReflectCamera>();
@@ -256,6 +265,9 @@ namespace LinHowe.WaterRender
 
             mf.sharedMesh = mesh;
             mr.sharedMaterial = material;
+            curVertexs = vertexList.ToArray();
+
+
         }
     }
 }
