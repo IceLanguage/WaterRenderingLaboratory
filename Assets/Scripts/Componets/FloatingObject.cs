@@ -147,7 +147,7 @@ namespace LinHowe
 
 
                     Vector3 surfaceNormal = water.GetSurfaceNormal(worldPoint);
-                    Quaternion surfaceRotation = Quaternion.FromToRotation(surfaceNormal,water.transform.up);
+                    Quaternion surfaceRotation = Quaternion.FromToRotation(water.transform.up, surfaceNormal);
                     surfaceRotation = Quaternion.Slerp(surfaceRotation, Quaternion.identity, submergedFactor);
 
                     Vector3 finalVoxelForce = surfaceRotation * force * submergedFactor;
