@@ -123,7 +123,7 @@ namespace LinHowe
 
         private void FixedUpdate()
         {
-            float voxelHeight = voxelSize.y;
+
             int len = m_Voxels.Length;
             int planeVoxels = VoxelSize * VoxelSize;
             Vector3 worldBoundsMin = transform.TransformPoint(m_Bounds.min);
@@ -136,14 +136,18 @@ namespace LinHowe
                 for (int i = 0; i < len; i++)
                 {
                     Vector3 worldPoint = transform.TransformPoint(m_Voxels[i]);
+
                     float submergedFactor = 0;
-                    float level = i / planeVoxels + voxelSize.y*0.5f;
+
                     if (worldPoint.y < water.transform.position.y)
-                        submergedFactor = level;
-                    submergedVolume += submergedFactor;
+                    {
+                    	submergedFactor = i / planeVoxels + voxelSize.y*0.5f;
+                        submergedVolume += submergedFactor;
+                    }
+
 
                     Vector3 surfaceNormal = water.GetSurfaceNormal(worldPoint);
-                    Quaternion surfaceRotation = Quaternion.FromToRotation(water.transform.up, surfaceNormal);
+                    Quaternion surfaceRotation = Quaternion.FromToRotation(surfaceNormal,water.transform.up);
                     surfaceRotation = Quaternion.Slerp(surfaceRotation, Quaternion.identity, submergedFactor);
 
                     Vector3 finalVoxelForce = surfaceRotation * force * submergedFactor;
