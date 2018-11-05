@@ -149,7 +149,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   waterSurfacesList:
   - {fileID: 501959}
-  VoxelSize: 5
+  VoxelSize: 50
   dragInWater: 0.49
   angularDragInWater: 0.56
 --- !u!54 &144039170

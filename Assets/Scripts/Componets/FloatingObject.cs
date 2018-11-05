@@ -141,7 +141,7 @@ namespace LinHowe
 
                     if (worldPoint.y < water.transform.position.y)
                     {
-                    	submergedFactor = i / planeVoxels + voxelSize.y*0.5f;
+                        submergedFactor = 1;// i / planeVoxels + voxelSize.y*0.5f;
                         submergedVolume += submergedFactor;
                     }
 
