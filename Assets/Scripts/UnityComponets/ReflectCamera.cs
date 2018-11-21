@@ -120,9 +120,6 @@ namespace LinHowe.WaterRender
             if (isRender) return;
             isRender = true;
 
-
-            
-
             Vector3 pos = transform.position;
             Vector3 normal = transform.up;
             Camera curCamera = Camera.current;

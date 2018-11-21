@@ -23,7 +23,7 @@ namespace LinHowe.WaterRender
         private MeshFilter mf;
         private Mesh mesh;
 
-        private Vector4 waveParams; //波形参数
+        public IWaveComponent waveComponent = new WaveEquation_Component();
 
         private float d;//单元间隔
 
@@ -32,13 +32,10 @@ namespace LinHowe.WaterRender
         private List<Vector3> vertexList;
         private Vector3[] curVertexs;
         public WaterCamera M_Camera { get; set; }
-        //public void CalculateUV(Vector3 worldPos,out float u,out float v)
-        //{
-        //    float xzero = -width * 0.5f;
-        //    float zzero = -length * 0.5f;
-        //    u = (worldPos.x - xzero) / xcellsize * uvxcellsize;
-        //    v = (worldPos.z - zzero) / ycellsize * uvycellsize;
-        //}
+
+        //避免在Update中执行过多的运算，只更新与浮体接触的顶点数据
+        private HashSet<int> NeedUpdateVertexs = new HashSet<int>();
+        
 
         public Vector3 GetSurfaceNormal(Vector3 worldPoint)
         {
@@ -59,14 +56,16 @@ namespace LinHowe.WaterRender
             return transform.up;
         }
 
-        private int GetIndex(int x,int z)
+        private int GetIndex(int x, int z)
         {
-            return z * (xsize + 1) + x;
+            int index = z * (xsize + 1) + x;
+            NeedUpdateVertexs.Add(index);
+            return index;
         }
         public Vector3[] GetSurroundingTrianglePolygon(Vector3 worldPoint)
         {
             Vector3 localPoint = this.transform.InverseTransformPoint(worldPoint);
-            int x = Mathf.CeilToInt((localPoint.x + width/2f)/ xcellsize);
+            int x = Mathf.CeilToInt((localPoint.x + width / 2f) / xcellsize);
             int z = Mathf.CeilToInt((localPoint.z + length / 2f) / ycellsize);
             if (x <= 0 || z <= 0 || x >= (xsize + 1) || z >= (ysize + 1))
             {
@@ -74,7 +73,7 @@ namespace LinHowe.WaterRender
             }
 
             Vector3[] trianglePolygon = new Vector3[3];
-            
+
             if ((worldPoint - vertexList[GetIndex(x, z)]).sqrMagnitude <
                 ((worldPoint - vertexList[GetIndex(x - 1, z - 1)]).sqrMagnitude))
             {
@@ -93,11 +92,14 @@ namespace LinHowe.WaterRender
         private void Update()
         {
             curVertexs = mesh.vertices;
-            int len = curVertexs.Length;
-            for (int i = 0;i<len;++i)
+            
+            foreach (int i in NeedUpdateVertexs)
             {
                 curVertexs[i] = transform.TransformPoint(curVertexs[i]);
             }
+            NeedUpdateVertexs.Clear();
+
+
         }
         void Start()
         {
@@ -135,7 +137,8 @@ namespace LinHowe.WaterRender
                 return;
             }
             M_Camera.InitMat(waveEquationShader, normalGenerateShader, forceShader);
-            M_Camera.Init(width, length, depth, MapSize, waveParams);
+            M_Camera.Init(width, length, depth, MapSize,waveComponent);
+            waveComponent.SetWaveParams(M_Camera);
         }
 
         private void InitComponent()
@@ -166,56 +169,12 @@ namespace LinHowe.WaterRender
             }
 
 
-            if (!RefreshWaveParams(Velocity, Viscosity))
+            if (!waveComponent.InitAndCheckWaveParams(Velocity, Viscosity,d))
                 return false;
 
             return true;
         }
 
-        private bool RefreshWaveParams(float speed, float viscosity)
-        {
-            if (speed <= 0)
-            {
-                Debug.LogError("波速不允许小于等于0！");
-                return false;
-            }
-            if (viscosity <= 0)
-            {
-                Debug.LogError("粘度系数不允许小于等于0！");
-                return false;
-            }
-            float maxvelocity = d / (2 * Time.fixedDeltaTime) * Mathf.Sqrt(viscosity * Time.fixedDeltaTime + 2);
-            float velocity = maxvelocity * speed;
-            float viscositySq = viscosity * viscosity;
-            float velocitySq = velocity * velocity;
-            float deltaSizeSq = d * d;
-            float dt = Mathf.Sqrt(viscositySq + 32 * velocitySq / (deltaSizeSq));
-            float dtden = 8 * velocitySq / (deltaSizeSq);
-            float maxT = (viscosity + dt) / dtden;
-            float maxT2 = (viscosity - dt) / dtden;
-            if (maxT2 > 0 && maxT2 < maxT)
-                maxT = maxT2;
-            if (maxT < Time.fixedDeltaTime)
-            {
-                Debug.LogError("粘度系数不符合要求");
-                return false;
-            }
-
-            float fac = velocitySq * Time.fixedDeltaTime * Time.fixedDeltaTime / deltaSizeSq;
-            float i = viscosity * Time.fixedDeltaTime - 2;
-            float j = viscosity * Time.fixedDeltaTime + 2;
-
-            float k1 = (4 - 8 * fac) / (j);
-            float k2 = i / j;
-            float k3 = 2 * fac / j;
-
-            waveParams = new Vector4(k1, k2, k3, d);
-
-            Velocity = speed;
-            Viscosity = viscosity;
-
-            return true;
-        }
         private void InitMesh()
         {
             xsize = Mathf.RoundToInt(width / cellSize);
