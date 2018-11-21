@@ -12,7 +12,6 @@ namespace LinHowe.WaterRender
     {
         private Camera m_Camera;
         private RenderTexture CurTexture;//当前渲染纹理
-        private RenderTexture PreTexture;//上一刻的渲染纹理
         private RenderTexture HeightMap;//高度纹理贴图
         private RenderTexture NormalMap;//法线纹理贴图
 
@@ -37,8 +36,8 @@ namespace LinHowe.WaterRender
         public void Init(float width, float height, float depth, int texSize, IWaveComponent waveComponent)
         {
             this.waveComponent = waveComponent;
-            waveComponent.SetWaveParams(this);
-            waveComponent.InitWaterCamera(texSize);
+            waveComponent.InitWaterCamera(texSize,waveEquationMat);
+            
 
             m_Camera = gameObject.AddComponent<Camera>();
             m_Camera.aspect = width / height;
@@ -78,10 +77,7 @@ namespace LinHowe.WaterRender
             RenderTexture.active = tmp;
             m_Camera.targetTexture = CurTexture;
         }
-        public void SetWaveParams(Vector4 wave)
-        {
-            waveEquationMat.SetVector("_WaveParams", wave);
-        }
+        
         public void ForceDrawMesh(Mesh mesh, Matrix4x4 matrix)
         {
             if (null == mesh || null == m_CommandBuffer)

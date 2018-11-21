@@ -154,6 +154,33 @@ MeshFilter:
   m_PrefabInternal: {fileID: 0}
   m_GameObject: {fileID: 16301037}
   m_Mesh: {fileID: 0}
+--- !u!1 &392559451 stripped
+GameObject:
+  m_PrefabParentObject: {fileID: 1623687497035066, guid: 6fed62f6ee9488149878f7b530fe7679,
+    type: 2}
+  m_PrefabInternal: {fileID: 2129207524}
+--- !u!114 &392559455
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 392559451}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: b489476b54e32d3459fdf95c112a249b, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  waves:
+  - L: 0.3
+    A: 0.0005
+    S: 0.56
+    pos: {x: -2.21, y: 0}
+    D: {x: 1.74, y: 0}
+  - L: 0.31
+    A: 0.001
+    S: 0.11
+    pos: {x: -0.63, y: 3.81}
+    D: {x: -0.63, y: -0.17}
 --- !u!1001 &757684044
 Prefab:
   m_ObjectHideFlags: 0
@@ -368,6 +395,16 @@ Prefab:
       propertyPath: m_Enabled
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 114859584621364724, guid: 6fed62f6ee9488149878f7b530fe7679,
+        type: 2}
+      propertyPath: ChooseWaveComponent
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 114859584621364724, guid: 6fed62f6ee9488149878f7b530fe7679,
+        type: 2}
+      propertyPath: waveEquationShader
+      value: 
+      objectReference: {fileID: 4800000, guid: 652973bb1a781df4bb798e9f0d0a7649, type: 3}
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 100100000, guid: 6fed62f6ee9488149878f7b530fe7679, type: 2}
   m_IsPrefabParent: 0

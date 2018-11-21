@@ -23,19 +23,40 @@ namespace LinHowe.WaterRender
         private MeshFilter mf;
         private Mesh mesh;
 
-        public IWaveComponent waveComponent = new WaveEquation_Component();
+        public WaveComponentEnum ChooseWaveComponent;
+        private IWaveComponent waveComponent;
+
+        //存储枚举和组件的映射关系
+        private readonly Dictionary<WaveComponentEnum, IWaveComponent> WaveComponentsDictionary;
+
 
         private float d;//单元间隔
 
         private int xsize, ysize;
-        private float xcellsize, uvxcellsize, ycellsize, uvycellsize;
+        [HideInInspector]
+        public float xcellsize, uvxcellsize, ycellsize, uvycellsize;
         private List<Vector3> vertexList;
         private Vector3[] curVertexs;
         public WaterCamera M_Camera { get; set; }
 
         //避免在Update中执行过多的运算，只更新与浮体接触的顶点数据
         private HashSet<int> NeedUpdateVertexs = new HashSet<int>();
-        
+
+        WaterSurface()
+        {
+            WaveComponentsDictionary
+            = new Dictionary<WaveComponentEnum, IWaveComponent>()
+            {
+                {
+                    WaveComponentEnum.WaveEquation,
+                    new WaveEquation_Component(this)
+                },
+                {
+                    WaveComponentEnum.SineWave,
+                    new SineWave_Component(this)
+                }
+            };
+        }
 
         public Vector3 GetSurfaceNormal(Vector3 worldPoint)
         {
@@ -101,16 +122,20 @@ namespace LinHowe.WaterRender
 
 
         }
+
+        
         void Start()
         {
-            gameObject.AddComponent<ReflectCamera>();
+            InitComponent();
+           
+            waveComponent = WaveComponentsDictionary[ChooseWaveComponent];
             d = 1.0f / MapSize;
-
+            InitMesh();
             if (!CheckSupport())
                 return;
             InitWaterCamera();
-            InitComponent();
-            InitMesh();
+            
+            
 
             Shader.SetGlobalFloat("internal_Force", forceFactor);
         }
@@ -138,11 +163,12 @@ namespace LinHowe.WaterRender
             }
             M_Camera.InitMat(waveEquationShader, normalGenerateShader, forceShader);
             M_Camera.Init(width, length, depth, MapSize,waveComponent);
-            waveComponent.SetWaveParams(M_Camera);
+            
         }
 
         private void InitComponent()
         {
+            gameObject.AddComponent<ReflectCamera>();
             mr = gameObject.GetComponent<MeshRenderer>();
             if (mr == null)
                 mr = gameObject.AddComponent<MeshRenderer>();

@@ -33,7 +33,9 @@
 			sampler2D _MainTex;
 			sampler2D _PreTex;
 			float4 _WaveParams;
-			
+			float4 _MainTex_TexelSize;
+			float2 _WaveOrigin;
+			float _Timer;
 			v2f vert (appdata v)
 			{
 				v2f o;
@@ -44,17 +46,10 @@
 			
 			float4 frag (v2f i) : SV_Target
 			{
-				float cur = _WaveParams.x*DecodeHeight(tex2D(_MainTex, i.uv));
-				float rg = _WaveParams.z*
-				(
-					DecodeHeight(tex2D(_MainTex, i.uv + float2(_WaveParams.w, 0))) + 
-					DecodeHeight(tex2D(_MainTex, i.uv + float2(-_WaveParams.w,0))) + 
-					DecodeHeight(tex2D(_MainTex, i.uv + float2(0, _WaveParams.w))) + 
-					DecodeHeight(tex2D(_MainTex, i.uv + float2(0,-_WaveParams.w)))
-				);
-				float pre = _WaveParams.y*DecodeHeight(tex2D(_PreTex, i.uv));
-				cur += rg + pre;
-				cur *= 0.95;
+			
+				float cur = DecodeHeight(tex2D(_MainTex, i.uv));
+				cur += _WaveParams.x * cos(dot(_WaveParams.yz,i.uv - _WaveOrigin) + _Timer * _WaveParams.w); 
+				
 				return EncodeHeight(cur);
 			}
 			ENDCG

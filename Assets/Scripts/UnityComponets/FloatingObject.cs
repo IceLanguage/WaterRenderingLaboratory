@@ -18,8 +18,8 @@ namespace LinHowe
 
         private Rigidbody m_Rigidbody;
         private float m_Volume;//体积
-        private float m_Density;//密度
-        private float m_Mass;//质量
+        //private float m_Density;//密度
+        //private float m_Mass;//质量
         private Vector3[] m_Voxels;//体素
         private Vector3 voxelSize;
         private float initialDrag, initialAngularDrag;
@@ -34,10 +34,10 @@ namespace LinHowe
             initialAngularDrag = m_Rigidbody.angularDrag;
 
           
-            m_Mass = m_Rigidbody.mass;
+            //m_Mass = m_Rigidbody.mass;
 
             CalualateVolume();
-            m_Density = m_Mass / m_Volume;
+            //m_Density = m_Mass / m_Volume;
             CalualateVoxels();
         }
 
@@ -125,8 +125,8 @@ namespace LinHowe
         {
 
             int len = m_Voxels.Length;
-            int planeVoxels = VoxelSize * VoxelSize;
-            Vector3 worldBoundsMin = transform.TransformPoint(m_Bounds.min);
+            //int planeVoxels = VoxelSize * VoxelSize;
+            
             foreach (WaterSurface water in waterSurfacesList)
             {
                 Vector3 force = water.Density * m_Volume * -Physics.gravity / m_Voxels.Length;
