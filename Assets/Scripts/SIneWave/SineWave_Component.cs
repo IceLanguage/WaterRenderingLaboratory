@@ -10,9 +10,11 @@ namespace LinHowe
     {
 
         private SineWaveMonoBehaviour sineWavesMonoBehaviour;
-        private List<Vector4> waves = new List<Vector4>();
-        private List<Vector2> origins = new List<Vector2>();
-        private float timer = 0;
+        private List<Vector4> waves = new List<Vector4>();//传入shader中的波形参数
+        private List<Vector2> origins = new List<Vector2>();//传入shader中的波源uv参数
+        private List<float> timers = new List<float>();//计时器
+        private List<float> cycles = new List<float>();//周期
+        private float MainTimer = 0;//传入shader的时间参数
 
         public SineWave_Component(WaterRender.WaterSurface water) : base(water)
         {
@@ -24,9 +26,14 @@ namespace LinHowe
             if (sineWavesMonoBehaviour == null) return false;
             sineWavesMonoBehaviour.CaluateUV();
             int size = sineWavesMonoBehaviour.waves.Count;
+            waves = new List<Vector4>(size);
+            origins = new List<Vector2>(size);
+            timers = new List<float>(size);
+            cycles = new List<float>(size);
             for (int i = 0; i < size; ++i)
             {
                 SineWave wave = sineWavesMonoBehaviour.waves[i];
+                if (wave.T < 0.1f) wave.T = 0.1f;
                 //wave.S = speed;
                 Vector2 direction = wave.D;
                 wave.D = direction.normalized;
@@ -39,6 +46,8 @@ namespace LinHowe
                 WaveParams.w = PhaseConstant;
                 waves.Add(WaveParams);
                 origins.Add(wave.pos);
+                timers.Add(0);
+                cycles.Add(wave.T);
             }
             return true;
         }
@@ -59,13 +68,20 @@ namespace LinHowe
            
             for (int i = 0; i < size; ++i)
             {
-                Vector4 waveParams = waves[i];
-                Vector2 uv = origins[i];
+                timers[i] += Time.fixedDeltaTime;
+                if(cycles[i]>=timers[i])
+                {
+                    timers[i] -= cycles[i];
+                    Vector4 waveParams = waves[i];
+                    Vector2 uv = origins[i];
+
+                    SetWaveParams(waveEquationMat, waveParams, uv);
+                    Graphics.Blit(src, dst, waveEquationMat);
+                    Graphics.Blit(dst, src);
+                }
                 
-                SetWaveParams(waveEquationMat, waveParams, uv);
-                Graphics.Blit(src, dst, waveEquationMat);
             }
-            timer += Time.fixedDeltaTime;
+            MainTimer += Time.fixedDeltaTime;
 
 
         }
@@ -74,7 +90,7 @@ namespace LinHowe
         {
             waveEquationMat.SetVector("_WaveOrigin", waveOrigin);
             waveEquationMat.SetVector("_WaveParams", waveParams);
-            waveEquationMat.SetFloat("_Timer", timer);
+            waveEquationMat.SetFloat("_Timer", MainTimer);
         }
     }
 }

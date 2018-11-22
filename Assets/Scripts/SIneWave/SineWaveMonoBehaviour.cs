@@ -9,6 +9,7 @@ namespace LinHowe
         public float L, A, S;//波长，波幅,速度
         public Vector2 pos;//波源
         public Vector2 D;//方向
+        public float T;//周期
     }
     /// <summary>
     /// 用以显示波形参数

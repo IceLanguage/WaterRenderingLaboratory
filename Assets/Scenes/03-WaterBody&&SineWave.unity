@@ -172,15 +172,17 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   waves:
   - L: 0.3
-    A: 0.0005
-    S: 0.56
+    A: 0.0013
+    S: 0.22
     pos: {x: -2.21, y: 0}
-    D: {x: 1.74, y: 0}
+    D: {x: -1.39, y: -5.79}
+    T: 7.47
   - L: 0.31
-    A: 0.001
+    A: 0.0008
     S: 0.11
     pos: {x: -0.63, y: 3.81}
-    D: {x: -0.63, y: -0.17}
+    D: {x: 0.12, y: -0.17}
+    T: 2.53
 --- !u!1001 &757684044
 Prefab:
   m_ObjectHideFlags: 0
