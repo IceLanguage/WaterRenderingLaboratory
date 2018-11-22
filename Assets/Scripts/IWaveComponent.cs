@@ -10,7 +10,8 @@ namespace LinHowe
     public enum WaveComponentEnum
     {
         WaveEquation,
-        SineWave
+        SineWave,
+        SineWaveDeform
     }
     /// <summary>
     /// 水体波动组件

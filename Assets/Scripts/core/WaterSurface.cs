@@ -55,6 +55,11 @@ namespace LinHowe.WaterRender
                     WaveComponentEnum.SineWave,
                     new SineWave_Component(this)
                 }
+                ,
+                {
+                    WaveComponentEnum.SineWaveDeform,
+                    new SineWaveDeform_Component(this)
+                }
             };
         }
 
