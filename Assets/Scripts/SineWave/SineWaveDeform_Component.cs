@@ -4,7 +4,7 @@ using UnityEngine;
 namespace LinHowe
 {
     /// <summary>
-    /// 正弦函数模拟水面波形
+    /// 正弦函数变形模拟水面
     /// </summary>
     class SineWaveDeform_Component : SineWave_Component
     {

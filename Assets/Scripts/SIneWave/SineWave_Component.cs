@@ -9,12 +9,12 @@ namespace LinHowe
     class SineWave_Component : IWaveComponent
     {
 
-        private SineWaveMonoBehaviour sineWavesMonoBehaviour;
-        private List<Vector4> waves = new List<Vector4>();//传入shader中的波形参数
-        private List<Vector2> origins = new List<Vector2>();//传入shader中的波源uv参数
-        private List<float> timers = new List<float>();//计时器
-        private List<float> cycles = new List<float>();//周期
-        private float MainTimer = 0;//传入shader的时间参数
+        protected SineWaveMonoBehaviour sineWavesMonoBehaviour;
+        protected List<Vector4> waves = new List<Vector4>();//传入shader中的波形参数
+        protected List<Vector2> origins = new List<Vector2>();//传入shader中的波源uv参数
+        protected List<float> timers = new List<float>();//计时器
+        protected List<float> cycles = new List<float>();//周期
+        protected float MainTimer = 0;//传入shader的时间参数
 
         public SineWave_Component(WaterRender.WaterSurface water) : base(water)
         {
@@ -50,16 +50,6 @@ namespace LinHowe
                 cycles.Add(wave.T);
             }
             return true;
-        }
-
-        public override void InitWaterCamera(int texSize, Material waveEquationMat)
-        {
-
-        }
-
-        public override void OnDestroy()
-        {
-
         }
 
         public override void OnRenderImage(RenderTexture src, RenderTexture dst, Material waveEquationMat)

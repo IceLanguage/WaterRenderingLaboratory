@@ -172,29 +172,11 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   waves:
   - L: 0.3
-    A: 0.0009
+    A: 0.003
     S: 0.22
     pos: {x: -2.21, y: 0}
-    D: {x: -1.39, y: -5.79}
-    T: 7.47
-  - L: 0.31
-    A: 0.0008
-    S: 0.11
-    pos: {x: -0.63, y: 3.81}
-    D: {x: 0.12, y: -0.17}
-    T: 2.53
-  - L: 0.31
-    A: 0.0006
-    S: 0.11
-    pos: {x: 1.88, y: 3.81}
-    D: {x: -0.16, y: -0.17}
-    T: 2.53
-  - L: 0.31
-    A: 0.0005
-    S: 0.11
-    pos: {x: -0.63, y: -3.31}
-    D: {x: -2, y: -0.17}
-    T: 2.53
+    D: {x: 1.41, y: 0}
+    T: 0
 --- !u!1001 &757684044
 Prefab:
   m_ObjectHideFlags: 0
@@ -412,13 +394,18 @@ Prefab:
     - target: {fileID: 114859584621364724, guid: 6fed62f6ee9488149878f7b530fe7679,
         type: 2}
       propertyPath: ChooseWaveComponent
-      value: 1
+      value: 3
       objectReference: {fileID: 0}
     - target: {fileID: 114859584621364724, guid: 6fed62f6ee9488149878f7b530fe7679,
         type: 2}
       propertyPath: waveEquationShader
       value: 
-      objectReference: {fileID: 4800000, guid: 652973bb1a781df4bb798e9f0d0a7649, type: 3}
+      objectReference: {fileID: 4800000, guid: e05d11c1e917c0b40807671a9b35b54a, type: 3}
+    - target: {fileID: 114859584621364724, guid: 6fed62f6ee9488149878f7b530fe7679,
+        type: 2}
+      propertyPath: cellSize
+      value: 0.04
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 100100000, guid: 6fed62f6ee9488149878f7b530fe7679, type: 2}
   m_IsPrefabParent: 0

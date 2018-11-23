@@ -15,6 +15,10 @@ sampler2D internalShadowMap;
 sampler2D _WaterHeightMap;
 sampler2D _WaterNormalMap;
 
+//GerstnerWave_Component.cs
+sampler2D _WaterOffsetXMap;
+sampler2D _WaterOffsetZMap;
+
 //WaterBody.cs
 float4 _BoundingBoxMin;
 float4 _BoundingBoxMax;

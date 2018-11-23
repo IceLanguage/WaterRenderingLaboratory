@@ -11,7 +11,8 @@ namespace LinHowe
     {
         WaveEquation,
         SineWave,
-        SineWaveDeform
+        SineWaveDeform,
+        GerstnerWave
     }
     /// <summary>
     /// 水体波动组件
@@ -32,12 +33,13 @@ namespace LinHowe
         /// <returns></returns>
         public abstract bool InitAndCheckWaveParams(float speed, float viscosity,float d);
 
-
         public abstract void OnRenderImage(RenderTexture src, RenderTexture dst,Material waveEquationMat);
 
-        public abstract void InitWaterCamera(int texSize,Material waveEquationMat);
+        public virtual void InitWaterCamera(int texSize,Material waveEquationMat) { }
 
-        public abstract void OnDestroy();
+        public virtual void OnDestroy() { }
+
+        public virtual void OnPostRender() { }
     }
 
    

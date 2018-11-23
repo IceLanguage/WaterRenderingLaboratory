@@ -178,6 +178,9 @@ namespace LinHowe.WaterRender
             m_CommandBuffer.ClearRenderTarget(true, false, Color.black);
             m_CommandBuffer.SetRenderTarget(CurTexture);
 
+            if (waveComponent!=null)
+                waveComponent.OnPostRender();
+
             Shader.SetGlobalTexture("_WaterHeightMap", HeightMap);
             Shader.SetGlobalTexture("_WaterNormalMap", NormalMap);
             

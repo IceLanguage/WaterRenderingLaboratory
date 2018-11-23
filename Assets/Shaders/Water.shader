@@ -6,6 +6,7 @@
 		_Specular("Specular", float) = 0
 		_Diffuse("Diffuse", float) = 0
 		_Height("Height", float) = 0
+		_Offset("Offset", float) = 0
 		_Range("Range", float) = 0
 		_Refract("Refract", float) = 0
 		_BaseColor("BaseColor", color) = (1,1,1,1)
@@ -58,6 +59,7 @@
 			float _Range;
 			float _Refract;
 			float _Height;
+			float _Offset;
 
 			float4 _BaseColor;
 			float4 _WaterColor;
@@ -81,6 +83,12 @@
 				//获取水面的高度
 				float height = DecodeHeight(tex2Dlod(_WaterHeightMap, float4(v.texcoord.xy,0,0)));
 				v.vertex.y += height * _Height;
+
+				//水面几何波造成的偏移
+				float offset = DecodeHeight(tex2Dlod(_WaterOffsetXMap, float4(v.texcoord.xy,0,0)));
+				v.vertex.x += offset * _Offset;
+				offset = DecodeHeight(tex2Dlod(_WaterOffsetZMap, float4(v.texcoord.xy,0,0)));
+				v.vertex.z += offset * _Offset;
 
 				o.uv = v.texcoord;
 				//从顶点着色输出雾数据
