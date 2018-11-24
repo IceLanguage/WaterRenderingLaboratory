@@ -89,7 +89,7 @@ Material:
     - _Metallic: 0
     - _Mode: 0
     - _OcclusionStrength: 1
-    - _Offset: -1.73
+    - _Offset: 1.08
     - _Parallax: 0.02
     - _Range: 4.6
     - _Refract: 0.02
