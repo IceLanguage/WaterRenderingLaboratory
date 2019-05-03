@@ -27,7 +27,7 @@ namespace LinHowe
             RenderTexture.active = GerstnerOffsetZMap;
             GL.Clear(false, true, new Color(0, 0, 0, 0));
 
-            waveEquationMat.SetFloat("Qi", 0.6f);
+            waveEquationMat.SetFloat("Qi", 0.9f);
         }
 
         public override void OnDestroy()
