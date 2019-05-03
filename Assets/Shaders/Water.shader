@@ -84,11 +84,11 @@
 				float height = DecodeHeight(tex2Dlod(_WaterHeightMap, float4(v.texcoord.xy,0,0)));
 				v.vertex.y += height * _Height;
 
-				//水面几何波造成的偏移
-				float offset = DecodeHeight(tex2Dlod(_WaterOffsetXMap, float4(v.texcoord.xy,0,0)));
-				v.vertex.x += offset * _Offset;
-				offset = DecodeHeight(tex2Dlod(_WaterOffsetZMap, float4(v.texcoord.xy,0,0)));
-				v.vertex.z += offset * _Offset;
+				////水面几何波造成的偏移
+				//float offset = DecodeHeight(tex2Dlod(_WaterOffsetXMap, float4(v.texcoord.xy,0,0)));
+				//v.vertex.x += offset * _Offset;
+				//offset = DecodeHeight(tex2Dlod(_WaterOffsetZMap, float4(v.texcoord.xy,0,0)));
+				//v.vertex.z += offset * _Offset;
 
 				o.uv = v.texcoord;
 				//从顶点着色输出雾数据

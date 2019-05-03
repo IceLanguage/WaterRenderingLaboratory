@@ -94,21 +94,21 @@ namespace LinHowe.WaterRender
         }
 
         
-        /// <summary>
-        /// 
-        /// </summary>
-        /// <param name="projection"></param>
-        /// <param name="clipPlane"></param>
-        private static void CalculateObliqueMatrix(ref Matrix4x4 projection, Vector4 clipPlane)
-        {
-            Vector4 q = projection.inverse * new Vector4(SignExt(clipPlane.x), SignExt(clipPlane.y), 1.0f, 1.0f);
-            Vector4 c = clipPlane * (2.0F / (Vector4.Dot(clipPlane, q)));
+        ///// <summary>
+        ///// 
+        ///// </summary>
+        ///// <param name="projection"></param>
+        ///// <param name="clipPlane"></param>
+        //private static void CalculateObliqueMatrix(ref Matrix4x4 projection, Vector4 clipPlane)
+        //{
+        //    Vector4 q = projection.inverse * new Vector4(SignExt(clipPlane.x), SignExt(clipPlane.y), 1.0f, 1.0f);
+        //    Vector4 c = clipPlane * (2.0F / (Vector4.Dot(clipPlane, q)));
 
-            projection[2] = c.x - projection[3];
-            projection[6] = c.y - projection[7];
-            projection[10] = c.z - projection[11];
-            projection[14] = c.w - projection[15];
-        }
+        //    projection[2] = c.x - projection[3];
+        //    projection[6] = c.y - projection[7];
+        //    projection[10] = c.z - projection[11];
+        //    projection[14] = c.w - projection[15];
+        //}
 
         private void OnWillRenderObject()
         {

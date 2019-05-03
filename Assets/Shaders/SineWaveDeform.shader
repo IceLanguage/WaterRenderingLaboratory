@@ -50,7 +50,7 @@
 			
 				float cur = DecodeHeight(tex2D(_MainTex, i.uv));
 				float t = dot(_WaveParams.yz,i.uv - _WaveOrigin) + _Timer * _WaveParams.w;
-				cur += _WaveParams.x * k * cos(t) * pow( (sin(t) + 1)/2  , k -1) ;
+				cur += _WaveParams.x * 2 * pow( (sin(t) + 1)/2  , k) ;
 				
 				return EncodeHeight(cur);
 			}

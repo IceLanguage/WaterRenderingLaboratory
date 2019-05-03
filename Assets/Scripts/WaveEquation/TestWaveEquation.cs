@@ -221,7 +221,7 @@ namespace LinHowe.WaveEquation
             if (hit >= 0 && hit <= Xsize)
             {
                 Vector3 p = VertexList[hit * 2 + 1];
-                float force = UnityEngine.Random.Range(-0.5f, 0.5f);
+                float force = UnityEngine.Random.Range(-0.1f, 0.2f);
                 p.y += force;
                 VertexList[hit * 2 + 1] = p;
             }
