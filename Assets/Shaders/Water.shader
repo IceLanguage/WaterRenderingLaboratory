@@ -117,10 +117,10 @@
 				float3 viewDir = normalize(UnityWorldSpaceViewDir(worldPos));
 
 				float2 projUv = i.proj0.xy / i.proj0.w + normal.xy * _Refract;
-				float4 col = tex2D(_GrabTexture,  projUv);
+				float4 refrcol = tex2D(_GrabTexture,  projUv);
 
 				float4 reflcol = tex2D(_WaterReflectTexture, projUv);
-				col.rgb *= _BaseColor.rgb;
+				refrcol.rgb *= _BaseColor.rgb;
 				float height = max(DecodeHeight(tex2D(_WaterHeightMap, i.uv)),0);
 
 				//半兰伯特模型
@@ -136,7 +136,9 @@
 				//菲涅尔效果
 				float bias = _Fresnel.x,scale = _Fresnel.y,power =_Fresnel.z;
 				float f = clamp(bias + pow(1 - saturate(dot(worldNormal, viewDir)),power) * scale, 0.0, 1.0);
-				col.rgb = lerp(col.rgb,diffuse + reflcol.rgb, f);
+
+				float4 col;
+				col.rgb = (diffuse + reflcol.rgb) * f + refrcol.rgb * (1 - f);
 				col.rgb += specular;
 
 
