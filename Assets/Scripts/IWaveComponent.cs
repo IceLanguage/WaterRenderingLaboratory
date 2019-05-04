@@ -12,7 +12,8 @@ namespace LinHowe
         WaveEquation,
         SineWave,
         SineWaveDeform,
-        GerstnerWave
+        GerstnerWave,
+        NoiseWave
     }
     /// <summary>
     /// 水体波动组件

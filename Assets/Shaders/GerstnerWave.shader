@@ -15,7 +15,7 @@
 			CGPROGRAM
 			#pragma vertex vert
 			#pragma fragment frag
-			
+
 			#include "UnityCG.cginc"
 			#include "internal.cginc"
 			struct appdata
@@ -50,12 +50,12 @@
 				float t = dot(_WaveParams.yz,i.uv - _WaveOrigin) + _Timer * _WaveParams.w;
 			    Qi = 1 / _WaveParams.w / _WaveParams.x;
 				#if GenerateGerstnerOffsetX
-					float offset = DecodeHeight(tex2D(_WaterOffsetXMap, float4(v.uv,0,0)));
-					offset += _WaveParams.x / _WaveParams.w * Qi * dot(_WaveParams.yz,float2((i.uv - _WaveOrigin).u,0) * cos(t) ;
+					float offset = DecodeHeight(tex2D(_WaterOffsetXMap, float4(i.uv,0,0)));
+					offset += _WaveParams.x / _WaveParams.w * Qi * dot(_WaveParams.yz,float2((i.uv - _WaveOrigin).x,0)) * cos(t) ;
 					return EncodeHeight(offset);
 				#elif GenerateGerstnerOffsetZ
-					float offset = DecodeHeight(tex2D(_WaterOffsetZMap, float4(v.uv,0,0)));
-					offset  += _WaveParams.x / _WaveParams.w * Qi * dot(_WaveParams.yz,float2(0,(i.uv - _WaveOrigin).v) * cos(t) ;
+					float offset = DecodeHeight(tex2D(_WaterOffsetZMap, float4(i.uv,0,0)));
+					offset  += _WaveParams.x / _WaveParams.w * Qi * dot(_WaveParams.yz,float2(0,(i.uv - _WaveOrigin).y)) * cos(t) ;
 					return EncodeHeight(offset);
 				#else
 					float cur = DecodeHeight(tex2D(_MainTex, i.uv));

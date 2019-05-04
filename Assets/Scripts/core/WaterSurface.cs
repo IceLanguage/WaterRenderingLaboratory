@@ -23,6 +23,8 @@ namespace LinHowe.WaterRender
         private MeshFilter mf;
         private Mesh mesh;
 
+        public Texture2D WaveMap;
+
         public WaveComponentEnum ChooseWaveComponent;
         private IWaveComponent waveComponent;
 
@@ -63,6 +65,10 @@ namespace LinHowe.WaterRender
                 {
                     WaveComponentEnum.GerstnerWave,
                     new GerstnerWave_Component(this)
+                },
+                {
+                    WaveComponentEnum.NoiseWave,
+                    new NoiseWave_Component(this)
                 }
             };
         }
@@ -135,6 +141,10 @@ namespace LinHowe.WaterRender
         
         void Start()
         {
+            if(waveEquationShader == null) waveEquationShader = Shader.Find("LinHowe/WaveEquation");
+            if(normalGenerateShader == null) normalGenerateShader = Shader.Find("LinHowe/NormalGenerate");
+            forceShader = Shader.Find("LinHowe/Force");
+
             InitComponent();
            
             waveComponent = WaveComponentsDictionary[ChooseWaveComponent];
@@ -147,6 +157,9 @@ namespace LinHowe.WaterRender
             
 
             Shader.SetGlobalFloat("internal_Force", forceFactor);
+
+            Shader.SetGlobalTexture("_WaveMap", WaveMap);
+
         }
 
         public void DrawMesh(Mesh mesh, Matrix4x4 matrix)

@@ -23,6 +23,10 @@ sampler2D _WaterOffsetZMap;
 float4 _BoundingBoxMin;
 float4 _BoundingBoxMax;
 
+//WaterSurface.cs
+sampler2D _WaveMap;
+float4 _WaveMap_ST;
+
 float Clip(float3 worldPos)
 {
 	if (worldPos.x < _BoundingBoxMin.x || worldPos.x > _BoundingBoxMax.x)

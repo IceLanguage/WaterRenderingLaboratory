@@ -1,4 +1,4 @@
-﻿Shader "LinHowe/NormalGenerate"
+﻿Shader "LinHowe/NoiseNoramlGenerate"
 {
 	Properties
 	{
@@ -43,20 +43,21 @@
 			
 			float4 frag (v2f i) : SV_Target
 			{
-				float lh = DecodeHeight(tex2D(_MainTex, i.uv + float2(-_MainTex_TexelSize.x, 0.0)));
-				float rh = DecodeHeight(tex2D(_MainTex, i.uv + float2(_MainTex_TexelSize.x, 0.0)));
-				float bh = DecodeHeight(tex2D(_MainTex, i.uv + float2(0.0, -_MainTex_TexelSize.y)));
-				float th = DecodeHeight(tex2D(_MainTex, i.uv + float2(0.0, _MainTex_TexelSize.y)));
-				float3 normal = normalize(float3(lh - rh, bh - th, 5.0*_MainTex_TexelSize.x));
+				float2 speed = _Time.y * float2(0.05f, 0.05f);
+
+				float2 uv = TRANSFORM_TEX(i.uv, _WaveMap);;
+				float3 bump1 = UnpackNormal(tex2D(_WaveMap, uv + speed)).rgb;
+				float3 bump2 = UnpackNormal(tex2D(_WaveMap, uv - speed)).rgb;
+				float3 normal = normalize(bump1 + bump2);
 				#if defined(UNITY_NO_DXT5nm)
 				return float4(normal*0.5 + 0.5, 1.0);
-				#else
-				#if UNITY_VERSION > 2018
-								return float4(normal.x*0.5 + 0.5, normal.y*0.5 + 0.5, 0, 1); //2018修改了法线压缩方式，增加了一种BC5压缩
-				#else
-								return float4(0, normal.y*0.5 + 0.5, 0, normal.x*0.5 + 0.5);
-				#endif
-				#endif
+#else
+#if UNITY_VERSION > 2018
+				return float4(normal.x*0.5 + 0.5, normal.y*0.5 + 0.5, 0, 1); //2018修改了法线压缩方式，增加了一种BC5压缩
+#else
+				return float4(0, normal.y*0.5 + 0.5, 0, normal.x*0.5 + 0.5);
+#endif
+#endif
 			}
 			ENDCG
 		}
