@@ -244,22 +244,22 @@ Prefab:
         type: 2}
       propertyPath: m_Materials.Array.data[0]
       value: 
-      objectReference: {fileID: 2100000, guid: 9aa32e8aa3bcf5f4ab459d66ff8984dc, type: 2}
+      objectReference: {fileID: 2100000, guid: f87832efda142fb4997aeaf7acec5b9d, type: 2}
     - target: {fileID: 23932324982664540, guid: bde2ced4d14d6294c82d6142a8e10e39,
         type: 2}
       propertyPath: m_Materials.Array.data[0]
       value: 
-      objectReference: {fileID: 2100000, guid: 9aa32e8aa3bcf5f4ab459d66ff8984dc, type: 2}
+      objectReference: {fileID: 2100000, guid: 87c5860573aad5545800084f3e16f83b, type: 2}
     - target: {fileID: 23350172091836750, guid: bde2ced4d14d6294c82d6142a8e10e39,
         type: 2}
       propertyPath: m_Materials.Array.data[0]
       value: 
-      objectReference: {fileID: 2100000, guid: 9aa32e8aa3bcf5f4ab459d66ff8984dc, type: 2}
+      objectReference: {fileID: 2100000, guid: f87832efda142fb4997aeaf7acec5b9d, type: 2}
     - target: {fileID: 23692291560471012, guid: bde2ced4d14d6294c82d6142a8e10e39,
         type: 2}
       propertyPath: m_Materials.Array.data[0]
       value: 
-      objectReference: {fileID: 2100000, guid: 9aa32e8aa3bcf5f4ab459d66ff8984dc, type: 2}
+      objectReference: {fileID: 2100000, guid: 87c5860573aad5545800084f3e16f83b, type: 2}
     - target: {fileID: 4958703024973206, guid: bde2ced4d14d6294c82d6142a8e10e39, type: 2}
       propertyPath: m_LocalScale.x
       value: 10.02

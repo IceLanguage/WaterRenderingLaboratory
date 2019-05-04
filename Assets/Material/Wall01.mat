@@ -6,7 +6,7 @@ Material:
   m_ObjectHideFlags: 0
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 0}
-  m_Name: UnderWaterCube
+  m_Name: Wall01
   m_Shader: {fileID: 4800000, guid: 7de2f293b3b24a44581d81b169f03e47, type: 3}
   m_ShaderKeywords: 
   m_LightmapFlags: 4
@@ -58,9 +58,9 @@ Material:
     - _BumpScale: 1
     - _Cutoff: 0.5
     - _DetailNormalMapScale: 1
-    - _Diffuse: 0.6
+    - _Diffuse: 0
     - _DstBlend: 0
-    - _Gloss: 0.42
+    - _Gloss: 1
     - _GlossMapScale: 1
     - _Glossiness: 0.5
     - _GlossyReflections: 1
@@ -69,7 +69,7 @@ Material:
     - _OcclusionStrength: 1
     - _Parallax: 0.02
     - _SmoothnessTextureChannel: 0
-    - _Specular: 0.7
+    - _Specular: 0
     - _SpecularHighlights: 1
     - _SrcBlend: 1
     - _UVSec: 0
@@ -77,4 +77,4 @@ Material:
     m_Colors:
     - _Color: {r: 1, g: 1, b: 1, a: 1}
     - _EmissionColor: {r: 0, g: 0, b: 0, a: 1}
-    - _WaterColor: {r: 0.5882353, g: 0.6052738, b: 0.9411765, a: 1}
+    - _WaterColor: {r: 1, g: 1, b: 1, a: 1}

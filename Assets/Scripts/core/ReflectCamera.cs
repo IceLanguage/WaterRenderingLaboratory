@@ -147,7 +147,6 @@ namespace LinHowe.WaterRender
 
             //反射相机渲染
             GL.invertCulling = true;//渲染的顶点做了翻转操作，但法线没有，所以背面会消隐，该操作翻转剔除操作
-            //m_camera.Render();
             {
                 m_camera.transform.position = newpos;
                 Vector3 euler = curCamera.transform.eulerAngles;

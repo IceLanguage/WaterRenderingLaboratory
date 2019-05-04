@@ -8,7 +8,7 @@
 		_Height("Height", float) = 0
 		_Offset("Offset", float) = 0
 		_Range("Range", float) = 0
-		_Refract("Refract", float) = 0
+		_Refract("Refract", Range(0,1)) = 0
 		_BaseColor("BaseColor", color) = (1,1,1,1)
 		_WaterColor("WaterColor", color) = (1,1,1,1)
 		_Fresnel("Fresnel x = bias,y = scale,z = power", vector) = (0, 0, 0, 0)
@@ -20,7 +20,7 @@
 		Tags{ "RenderType" = "Transparent" "Queue" = "Transparent" }
 		LOD 100
 
-		//抓取屏幕内容放到_GrabTexture纹理中
+		//抓取水底内容放到_GrabTexture纹理中
 		GrabPass{}
 
 		Pass
@@ -120,13 +120,12 @@
 				float4 refrcol = tex2D(_GrabTexture,  projUv);
 
 				float4 reflcol = tex2D(_WaterReflectTexture, projUv);
+				
 				refrcol.rgb *= _BaseColor.rgb;
 				float height = max(DecodeHeight(tex2D(_WaterHeightMap, i.uv)),0);
 
 				//半兰伯特模型
 				float3 diffuse = internalWorldLightColor.rgb * saturate(0.5 * dot(worldNormal, lightDir) + 0.5) * _Diffuse;
-
-				
 
 				//Blinn-Phong光照模型
 				float3 halfdir = normalize(lightDir + viewDir);
